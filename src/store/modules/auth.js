@@ -68,7 +68,7 @@ export const actions = {
         commit('SET_AUTHENTICATION', bool)
     },
 
-    async setCurrentUser({ commit, dispatch }) {
+    async setCurrentUser({ state, commit, dispatch }) {
             try {
                 const response = await axios.get('/users');
                 if (response.status >= 200 && response.status < 400) {
