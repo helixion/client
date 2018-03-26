@@ -1,0 +1,22 @@
+#main {
+  min-height: calc(100vh - 132px);
+  &.page {
+    padding-top: 10rem;
+  }
+  // &.menu-open {
+  //   &:before {
+  //     content: '';
+  //     position: absolute;
+  //     top: 0;
+  //     bottom: 0;
+  //     background-color: rgba(0, 0, 0, 0.5);
+  //     width: auto;
+  //     height: auto;
+  //     z-index: 4;
+  //   }
+  // }
+}
+
+body {
+  background-color: $primary-background-color;
+}

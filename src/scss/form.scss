@@ -1,0 +1,16 @@
+.is-disabled {
+  opacity: .2;
+}
+
+.field:not(:last-child) {
+  margin-bottom: 3rem !important;
+}
+
+.field:last-child {
+  flex: 1;
+}
+
+fieldset {
+  border: 0;
+}
+

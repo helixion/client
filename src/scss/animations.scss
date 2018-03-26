@@ -1,0 +1,30 @@
+
+
+.slide-in-from-left {
+  animation: slideInFromLeft 0.15s linear forwards;
+}
+
+.slide-out-from-left {
+  animation: slideOutFromLeft 0.15s linear forwards;
+}
+
+
+
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutFromLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translate(-100%);
+  }
+}
