@@ -34,8 +34,8 @@ export default new Vuex.Store({
         setModal({ commit }, payload) {
             commit('SET_MODAL_STATE', payload);
         },
-        toggleMobile({state, commit}) {
-            commit('TOGGLE_MOBILE', !state.showMobileMenu);
+        toggleMobile({state, commit}, bool) {
+            commit('TOGGLE_MOBILE', bool);
         },
         toggleHeader({state, commit}) {
             commit('TOGGLE_HEADER', !state.header);

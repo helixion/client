@@ -2,8 +2,8 @@
 <nav id="header" class="navbar is-black" @click.stop>
     <div class="container">
         <div class="navbar-brand">
-                <img src="http://localhost:8080/src/assets/bis-logo-sm.png" alt="">
-                <button :class="['button navbar-burger', { 'is-active': showMobileMenu }]" @click.prevent="toggleMobile">
+                <img src="http://localhost/images/bis-logo-sm.png" alt="">
+                <button :class="['button navbar-burger', { 'is-active': showMobileMenu }]" @click.prevent="toggleMobile(!showMobileMenu)">
                     <span></span>
                     <span></span>
                     <span></span>

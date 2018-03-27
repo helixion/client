@@ -41,34 +41,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.section-header {
-  width: 100%;
-  height: auto;
-  position: relative;
-  margin-bottom: 1rem;
-  h2 {
-    display: inline-block;
-    position: relative;
-    width: auto;
-    font-weight: 700;
-    margin: 0;
-    padding: 0 10px;
-    color: #cacaca;
-    z-index: 3;
-    left: 20px;
-    background-color: #23262b;
-  }
-  &:after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    top: 3px;
-    left: 0;
-    z-index: 1;
-    border: 10px solid #3498db;
-  }
-}
-
-</style>

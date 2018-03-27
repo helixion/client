@@ -14,7 +14,7 @@
           </div>
           <div class="bis-modal-body">
               <div class="bis-icon">
-                  <img src="http://localhost:8080/src/assets/bis-logo-sm.png" alt="">
+                  <img src="http://localhost/images/bis-logo-sm.png" alt="">
               </div>
               <keep-alive>
                   <component :is="selected" @setForm="selected = $event"></component>

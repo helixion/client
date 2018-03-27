@@ -36,7 +36,7 @@ export default {
       return this.$store.getters.showMobileMenu;
     },
     mainClasses() {
-      return ['page', { 'menu-open': this.showMobileMenu }]
+      return ['page', { 'mobile mobile-open': this.showMobileMenu }]
     }
   }
 }

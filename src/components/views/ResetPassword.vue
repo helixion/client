@@ -25,7 +25,7 @@ export default {
         .then(res => {
             next(vm => {
                 if (vm.isAuthenticated) {
-                    vm.$router.push('/404');
+                    vm.$router.push('errors/404');
                 } else {
                     vm.email = res.data.user.email;
                 }
