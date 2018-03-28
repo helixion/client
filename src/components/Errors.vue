@@ -1,65 +1,73 @@
 <template>
   <section id="error-status">
-      <div class="container">
-      <div class="columns is-vcentered is-multiline">
-          <div class="column is-3">
-              <div class="icon is-large">
-                  <i :class="errorClasses" aria-hidden="true"></i>
-              </div>
-              <div class="column is-9">
-                  <div class="content">
-                      <h6>[{{errorStatus.code}}]: {{errorStatus.type}}</h6>
-                      <h4>{{errorStatus.message}}</h4>
-                  </div>
-              </div>
-              <div class="column is-12 is-center">
-                <button class="button is-danger is-large" @click.prevent="$router.push({name: 'home'})">Go Home</button>
-              </div>
+    <div class="container">
+      <div class="columns is-vcentered" v-if="error">
+        <div class="column is-6">
+          <div class="status-icon">
+            <i :class="errorClasses" aria-hidden="true"></i>
           </div>
+        </div>
+        <div class="column is-6">
+          <div class="content">
+            <h6>[{{errorStatus.code}}]: {{errorStatus.type}}</h6>
+            <h4>{{errorStatus.message}}</h4>
+          </div>
+        </div>
       </div>
-  </div>
+       <div class="columns is-centered">
+          <button class="button is-danger is-medium" @click.prevent="$router.push({name: 'home'})">Go Home</button>
+        </div>
+    </div>
   </section>
 </template>
 
+
 <script>
 'use strict';
-
+const error = {
+    "500": {
+        code: 500,
+        class: 'fa-exclamation-triangle',
+        type: "Internal Server Error",
+        message: "We encountered an error and the service is trying to recover."
+    },
+    "401": {
+        code: 401,
+        class: 'fa-hand-paper',
+        type: "Unauthorized",
+        message: "You do not have sufficient access privilages"
+    },
+    "404": {
+        code: 404,
+        class: 'fa-question-circle',
+        type: "Not Found",
+        message: "the page you're looking for doesn't exist."
+    },
+    "403": {
+        code: 404,
+        class: 'fa-question-circle',
+        type: "Forbidden",
+        message: "You have no access privilages."
+    },
+}
+    
 export default {
   beforeRouteEnter(to, from, next) {
-    next(vm => {
-      const errorCode = vm.status;
-      console.log(vm.status);
-      if (!(errorCode in vm.error)) {
-        vm.$router.push('/');
-        return;
-      }
-    });
+    const incomingErrorCode = to.params.status;
+    const validError = Object.keys(error)
+        .find(err => err === incomingErrorCode);
+    if (!validError) {
+        next('/');
+    } else {
+        next(vm => vm.error = error);
+    }  
   },
 
   props: ['status'],
 
   data() {
     return {
-      error: {
-        "500": {
-            code: 500,
-            class: 'fa-exclamation-triangle',
-            type: "Internal Server Error",
-            message: "We encountered an error and the service is trying to recover."
-        },
-        "401": {
-            code: 401,
-            class: 'fa-hand-paper',
-            type: "Forbidden",
-            message: "You do not have sufficient access privilages"
-        },
-        "404": {
-            code: 404,
-            class: 'fa-question-circle',
-            type: "Not Found",
-            message: "the page you're looking for doesn't exist."
-        }
-      }
+      error: null,
     }
   },
 
@@ -77,8 +85,8 @@ export default {
 
 <style lang="scss">
 #error-status {
-  height: 100%;
+  padding: 2rem;
   width: 100%;
-  background-color: 111;
+  background-color: #010101;
 }
 </style>

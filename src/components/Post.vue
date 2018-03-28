@@ -53,7 +53,10 @@ export default {
 
 <style lang="scss">
 .article {
+  position: relative;
   width: 100%;
+  top: 0;
+  transition: all 0.15s ease;
   margin-bottom: 1rem;
   overflow: hidden;
   display: flex;

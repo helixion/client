@@ -18,6 +18,14 @@
             <router-link class="navbar-item" to="/">Recruitment</router-link>
             <router-link class="navbar-item" to="/">Media</router-link>
             <router-link class="navbar-item" to="/">Discussion</router-link>
+            <expand>
+              <a href="" slot="header">Tools</a>
+              <ul class="submenu" slot="links">
+                <li class="navbar-item">Bless Calculator</li>
+                <li class="navbar-item">CF Calcaulator</li>
+                <li class="navbar-item">Rift Calculator</li>
+              </ul>
+            </expand>  
           </div>
         </div>
     </nav>
@@ -26,8 +34,14 @@
 
 
 <script>
+'use strict';
+import Expand from './Expand';
+
 export default {
   name: 'mobile-menu',
+  components: {
+    Expand
+  },
   methods: {
       toggle(bool) {
           this.$store.dispatch('setModal', bool);
@@ -92,7 +106,7 @@ export default {
     }
     .navbar-head {
         text-align: center;
-        background-color: #111;
+        background-color: #000;
         font-weight: 700;
         text-transform: uppercase;
     }
