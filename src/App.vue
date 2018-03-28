@@ -1,8 +1,11 @@
 <template>
   <div id="app">
-    <app-header v-if="hasHeader"></app-header>
+    <app-header></app-header>
     <mobile-menu v-show="showMobileMenu"></mobile-menu>
-    <main id="main" :class="mainClasses">
+    <main id="main" :class="mainClasses" @click.prevent="closeMobile" v-if="showMobileMenu">
+      <router-view></router-view>
+    </main>
+    <main id="main" :class="mainClasses" v-else>
       <router-view></router-view>
     </main>
     <app-footer></app-footer>
@@ -29,14 +32,28 @@ export default {
     isAuthenticated() {
       return this.$store.getters.isAuthenticated;
     },
-    hasHeader() {
-      return this.$store.getters.header;
-    },
     showMobileMenu() {
       return this.$store.getters.showMobileMenu;
     },
     mainClasses() {
       return ['page', { 'mobile mobile-open': this.showMobileMenu }]
+    }
+  },
+  methods: {
+    closeMobile(e) {
+      const target = document.querySelector('.mobile-open');
+      if (target) {
+
+        const zIndex = window.getComputedStyle(target, '::before')
+        .getPropertyValue('z-index');
+
+        console.log(zIndex);
+
+        if (target.classList.contains('mobile') && zIndex > -1) {
+          this.$store.dispatch('toggleMobile', false);
+        }
+      }
+      
     }
   }
 }

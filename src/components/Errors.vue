@@ -13,7 +13,7 @@
                   </div>
               </div>
               <div class="column is-12 is-center">
-                <button class="button is-danger is-large" @click.prevent="$router.push('/')">Go Home</button>
+                <button class="button is-danger is-large" @click.prevent="$router.push({name: 'home'})">Go Home</button>
               </div>
           </div>
       </div>
@@ -22,19 +22,18 @@
 </template>
 
 <script>
+'use strict';
+
 export default {
-  beforeEnterRoute(from, to, next) {
+  beforeRouteEnter(to, from, next) {
     next(vm => {
       const errorCode = vm.status;
+      console.log(vm.status);
       if (!(errorCode in vm.error)) {
-        vm.$router.push('/')
+        vm.$router.push('/');
+        return;
       }
-      vm.$store.dispatch("toggleHeader");
     });
-  },
-
-  beforeLeaveRoute(from, to, next) {
-    this.$store.dispatch("toggleHeader");
   },
 
   props: ['status'],

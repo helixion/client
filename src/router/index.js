@@ -8,7 +8,7 @@ import MyAccount from '@/components/views/MyAccount';
 import Home from '@/components/views/Home'
 import Verify from '@/components/views/Verify'
 import ResetPassword from '@/components/views/ResetPassword'
-import Errors from '@/components/errors/Errors';
+import Errors from '@/components/Errors';
 import ForumHandler from '@/components/ForumHandler';
 
 
@@ -23,8 +23,11 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'Home',
-      component: Home
+      name: 'home',
+      component: Home,
+      meta: {
+        title: 'Best In Slot'
+      }
     },
     {
       path: '/verify',
@@ -34,7 +37,10 @@ const router = new Router({
     {
       path: '/myaccount',
       name: 'myaccount',
-      component: MyAccount
+      component: MyAccount,
+      meta: {
+        title: "Best In Slot - My Account"
+      }
     },
     {
       path: '/sso',
@@ -45,9 +51,12 @@ const router = new Router({
       component: ResetPassword
     },
     {
-      path: '/error/:status(\\d)',
+      path: '/error/:status',
       component: Errors,
-      props: true
+      props: true,
+      meta: {
+        title: "Error!"
+      }
     },
     {
       path: '*',
@@ -56,6 +65,11 @@ const router = new Router({
     
   ]
 });
+
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title;
+  next();
+})
 
 router.onReady(() => {
 
