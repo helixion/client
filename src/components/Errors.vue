@@ -1,24 +1,23 @@
 <template>
-  <section id="error-status">
-    <div class="container">
-      <div class="columns is-vcentered" v-if="error">
-        <div class="column is-6">
-          <div class="status-icon">
-            <i :class="errorClasses" aria-hidden="true"></i>
+  <div class="container">
+    <section id="error-status">
+      <div class="columns is-gapless is-multiline has-text-centered">
+        <div class="error-icon column is-12">
+          <i :class="errorClasses" aria-hidden="true"></i>
+        </div>
+        <div class="column is-12">
+          <div class="content">
+            <h1 class="is-size-4-mobile">{{errorStatus.code}}</h1>
+            <h2 class="is-size-4-mobile">{{errorStatus.type}}</h2>
+            <h3 class="is-size-4-mobile">{{errorStatus.message}}</h3>
           </div>
         </div>
-        <div class="column is-6">
-          <div class="content">
-            <h6>[{{errorStatus.code}}]: {{errorStatus.type}}</h6>
-            <h4>{{errorStatus.message}}</h4>
-          </div>
+        <div class="column is-12">
+          <button class="button is-danger" @click.prevent="$router.push({name: 'home'})">Return to Home</button>
         </div>
       </div>
-       <div class="columns is-centered">
-          <button class="button is-danger is-medium" @click.prevent="$router.push({name: 'home'})">Go Home</button>
-        </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </template>
 
 
@@ -33,19 +32,19 @@ const error = {
     },
     "401": {
         code: 401,
-        class: 'fa-hand-paper',
+        class: 'fa-ban',
         type: "Unauthorized",
-        message: "You do not have sufficient access privilages"
+        message: "You are not authorized to view this content."
     },
     "404": {
         code: 404,
         class: 'fa-question-circle',
         type: "Not Found",
-        message: "the page you're looking for doesn't exist."
+        message: "The content you're looking for doesn't exist."
     },
     "403": {
-        code: 404,
-        class: 'fa-question-circle',
+        code: 403,
+        class: 'fa-ban',
         type: "Forbidden",
         message: "You have no access privilages."
     },
@@ -59,7 +58,7 @@ export default {
     if (!validError) {
         next('/');
     } else {
-        next(vm => vm.error = error);
+        next();
     }  
   },
 
@@ -67,7 +66,7 @@ export default {
 
   data() {
     return {
-      error: null,
+      error,
     }
   },
 
@@ -85,8 +84,23 @@ export default {
 
 <style lang="scss">
 #error-status {
-  padding: 2rem;
-  width: 100%;
-  background-color: #010101;
+  margin-top: 5rem;
+  padding: 1.5rem 0;
+  background-color: #111;
+  min-width: 100%;
+  min-height: 30rem;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+  h1, 
+  h2 {
+    margin: 0;
+    padding: 0;
+    font-weight: 700;
+  }
+  .error-icon {
+    font-size: 8rem;
+  }
+  .error-icon {
+    color: #cacaca;
+  }
 }
 </style>

@@ -1,3 +1,12 @@
+body {
+  background-color: $primary-background-color;
+}
+
+html {
+  &.mobile-out {
+    overflow: hidden !important;
+  }
+}
 
 
 #main {
@@ -28,12 +37,8 @@
   }
 }
 
-body {
-  background-color: $primary-background-color;
-}
-
-html {
-  &.mobile-out {
-    overflow: hidden !important;
-  }
+h1,
+h2,
+h3 {
+  color: #cacaca !important;
 }
