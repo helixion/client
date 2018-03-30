@@ -78,7 +78,7 @@ export default {
   },
 
   methods: {
-      changePassword() {
+      async changePassword() {
           const { 
             currentPassword, 
             newPassword 

@@ -10,8 +10,9 @@
               <fieldset :class="{ 'is-disabled': sending }" :disabled="sending">
                   <form-input v-for="(input, key) in credentials" :key="key"
                   v-model="input.value"
+                  :label="input.label"                  
                   :inputType="input.type"
-                  :label="input.name"
+                  :id="input.id"
                   :validators="input.validators">
                 </form-input>
                 <div class="field is-horizontal">
@@ -89,7 +90,7 @@ export default {
         }
       },
       
-      changeEmail() {
+      async changeEmail() {
         const {password, email} = this.credentials;
         const data = {
           password: password.value,
