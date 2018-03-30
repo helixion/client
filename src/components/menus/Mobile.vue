@@ -5,11 +5,20 @@
           <img src="http://localhost/images/bis-logo.png" alt="">
           <span class="delete" @click.prevent="closeMobileMenu(false)"></span>
         </div>
-        <div class="navbar-head">
+        <div class="navbar-head" v-if="!isAuthenticated">
           <a href="" class="navbar-item" @click.prevent="toggle(!modal)">
             <i class="fa fa-user-circle"></i>
             Sign In / Up
           </a>
+        </div>
+        <div class="navbar-head" v-else>
+          <expand v-if="currentUser">
+            <a href="" class="navbar-item" slot="header">{{currentUser.username}}</a>
+            <ul class="submenu" slot="links">
+              <router-link to="/myaccount" tag="li" class="navbar-item"><a>Profile</a></router-link>
+              <li class="navbar-item" @click.prevent="invalidate"><a>Logout</a></li>
+            </ul>  
+          </expand>
         </div>
         <div class="navbar-menu">
           <div class="navbar-start">
@@ -36,13 +45,16 @@
 <script>
 'use strict';
 import Expand from './Expand';
-
+import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'mobile-menu',
   components: {
     Expand
   },
   methods: {
+    ...mapActions([
+      'invalidate'
+    ]),
       toggle(bool) {
           this.$store.dispatch('setModal', bool);
       },
@@ -51,16 +63,16 @@ export default {
       }
   },
   computed: {
-      modal() {
-          return this.$store.getters.modal;
-      },
-      mobile() {
-        return this.$store.getters.showMobileMenu;
-      }
+    ...mapGetters([
+      'modal',
+      'showMobileMenu',
+      'isAuthenticated',
+      'currentUser'
+    ])
   },
 
   watch: {
-    mobile(m) {
+    showMobileMenu(m) {
       const root = document.documentElement;
       if (m) {
         root.classList.add('mobile-out');

@@ -11,23 +11,28 @@
           <div class="column" v-if="currentUser">
             <h1 class="title">{{currentUser.username}}</h1>
             <h2 class="subtitle">
-              <i>{{currentUser.created_at}}</i>
+              <i>Member since {{date}}</i>
             </h2>
           </div>
         </div>
       </div>
     </section>
-    <edit-password-form :sending.sync="sending"></edit-password-form>
-    <edit-email-form :sending.sync="sending"></edit-email-form>   
+    <div class="columns is-multiline">
+      <edit-password-form :sending.sync="sending"></edit-password-form>
+      <edit-email-form :sending.sync="sending"></edit-email-form>  
+    </div> 
   </div>
 </template>
 
 <script>
+'use strict';
+import format from 'date-fns/format';
 import EditPasswordForm from '@/components/forms/EditPasswordForm';
 import EditEmailForm from '@/components/forms/EditEmailForm';
 
 
 export default {
+  name: 'MyAccount',
   components: { EditPasswordForm, EditEmailForm },
 
   beforeRouteEnter(to, from, next) {
@@ -78,6 +83,9 @@ export default {
     },
     currentUser() {
       return this.$store.getters.currentUser;
+    },
+    date() {
+      return format(this.currentUser.created_at, 'dddd, MMMM DD, YYYY');
     }
   }
 };

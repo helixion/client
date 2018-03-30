@@ -1,38 +1,37 @@
 <template>
-  <div class="columns is-multlined">
-      <div class="column">
-        <section id="edit-password">
-          <div class="section-head">
-            <h4 class="title is-4">Edit Email</h4>
-          </div>
-          <div class="section-body">
-            <form action="">
-              <fieldset :class="{ 'is-disabled': sending }" :disabled="sending">
-                  <form-input v-for="(input, key) in credentials" :key="key"
-                  v-model="input.value"
-                  :label="input.label"                  
-                  :inputType="input.type"
-                  :id="input.id"
-                  :validators="input.validators">
-                </form-input>
-                <div class="field is-horizontal">
-                  <div class="field-body">
-                    <div class="field is-grouped is-grouped-centered">
-                      <div class="control is-expanded">
-                        <button class="button is-primary is-fullwidth" @click.prevent="changeEmail">Submit</button>
-                      </div>
-                      <div class="control is-expanded">
-                        <button class="button is-primary is-outlined is-fullwidth" @click.prevent="clearForm">Reset</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </fieldset>
-            </form>
-          </div>
-        </section>
-      </div>
+<div class="column is-12">
+  <section id="edit-password">
+    <div class="section-head">
+      <h4 class="title is-4">Edit Email</h4>
     </div>
+    <div class="section-body">
+      <form action="">
+        <fieldset :class="{ 'is-disabled': sending }" :disabled="sending">
+          <form-input v-for="(input, key) in credentials" :key="key" 
+          v-model="input.value" 
+          :label="input.label" 
+          :inputType="input.type"
+          :id="input.id" 
+          :validators="input.validators">
+          </form-input>
+          <div class="field is-horizontal">
+            <div class="field-body">
+              <div class="field is-grouped is-grouped-centered">
+                <div class="control is-expanded">
+                  <button class="button is-primary is-fullwidth" @click.prevent="changeEmail">Submit</button>
+                </div>
+                <div class="control is-expanded">
+                  <button class="button is-primary is-outlined is-fullwidth" @click.prevent="clearForm">Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </section>
+</div>
+
 </template>
 
 <script>

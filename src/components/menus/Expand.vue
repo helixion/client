@@ -30,10 +30,11 @@ export default {
 <style lang="scss">
 .expand {
     .head {
-        position: relative;
-        span {
-            position: absolute;
-            right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        a {
+            flex: 1;
         }
     }
     .submenu {
