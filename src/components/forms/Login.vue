@@ -30,6 +30,8 @@
 </template>
 
 <script>
+'use strict';
+
 import Input from './inputs/ModalInput';
 
 export default {
@@ -59,26 +61,33 @@ export default {
   },
 
   methods: {
-    authenticate() {
+    async authenticate() {
       const { email, password } = this.$data;
       this.sending = true;
-      this.$store.dispatch('authenticate', { email, password })
-        .then(() => {
+      try {
+        const res = await this.$store
+          .dispatch('authenticate', { email, password });
+          
+        if (res.status >= 200 && res.status < 400) {
           this.sending = false;
           this.$router.push('/myaccount');
           this.clearForm();
-        })
-        .catch(e => {
-          if (e.response.status >= 400) {
-            this.sending = false;
+        }
+      }
+      catch (e) {
+        if (e.response) {
+          this.sending = false;
             this.$notify({
               group: 'notes',
               type: 'danger',
-              text: `${e.response.status}`
+              text: `${e.response.status}:${e.response.message}`
             })
             console.log(e.response.data);
-          }
-        })
+        } else {
+          console.log(e);
+        }
+      } 
+        
     },
 
     clearForm() {

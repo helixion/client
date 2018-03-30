@@ -8,16 +8,12 @@
           <div class="section-body">
             <form action="">
               <fieldset :class="{ 'is-disabled': sending }" :disabled="sending">
-                <div class="field is-horizontal" v-for="(input, key) in credentials" :key="key">
-                  <div class="field-label is-normal">
-                    <label for="" class="label">{{key.charAt(0).toUpperCase() + key.slice(1)}}</label>
-                  </div>
-                  <div class="field-body">
-                    <div class="field">
-                      <input :type="inputTypes[key]" class="input" v-model="credentials[key]">
-                    </div>
-                  </div>
-                </div>
+                  <form-input v-for="(input, key) in credentials" :key="key"
+                  v-model="input.value"
+                  :inputType="input.type"
+                  :label="input.name"
+                  :validators="input.validators">
+                </form-input>
                 <div class="field is-horizontal">
                   <div class="field-body">
                     <div class="field is-grouped is-grouped-centered">
@@ -39,7 +35,15 @@
 </template>
 
 <script>
+'use strict';
+import FormInput from './inputs/HorizontalFormInput';
 export default {
+  name: 'edit-email-form',
+
+  components: { FormInput },
+
+  $_veeValidate: 'new',
+
   props: {
     sending: {
       type: Boolean,
@@ -50,12 +54,28 @@ export default {
   data() {
       return {
           credentials: {
-              password: '',
-              email: '',
-          },
-          inputTypes: {
-            password: 'password',
-            email: 'text'
+              password: {
+                value: '',
+                label: 'password',
+                id: 'edit-email-password',
+                type: 'password',
+                validators: {
+                  required: true,
+                  alpha_num: true,
+                  min: 8,
+                  max: 20
+                }
+              },
+              email: {
+                value: '',
+                label: 'email',
+                id: 'edit-email',
+                type: 'text',
+                validators: {
+                  required: true,
+                  email: true
+                }
+              }
           }
       }
   },
@@ -70,31 +90,36 @@ export default {
       },
       
       changeEmail() {
-          const { 
-            password, 
-            email 
-        } = this.credentials;
+        const {password, email} = this.credentials;
+        const data = {
+          password: password.value,
+          email: email.value
+        }
         this.$emit('update:sending', true);
-        this.$http
-            .post('/users/edit-password', { password, email })
-            .then(res => {
-                this.$notify({
+        try {
+          const res = await this.$http.post('/users/edit-email', data);
+          if (res.status >= 200 && res.status < 400) {
+            this.$notify({
                     group: 'notes',
                     type: 'success',
                     text: 'An email has been dispatched.'
                 });
-                this.$emit('update:sending', false);
-                this.clearForm();
-            })
-            .catch(e => {
-              this.$notity({
+            this.$emit('update:sending', false);
+            this.clearForm();
+          }
+        }
+        catch (e) {
+         if (e.response && e.response.status >= 400 && e.response.status < 500) {
+            this.$notity({
                 group: 'notes',
                 type: 'error',
                 text: `${e.response.status}:${e.response.data.message}`
               });
-              this.$emit('update:sending', false);
-            })
-
+            this.$emit('update:sending', false);
+         } else {
+           console.log(e);
+         }
+        }
       }
   }
 }

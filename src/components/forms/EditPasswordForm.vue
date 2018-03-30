@@ -8,17 +8,13 @@
           <div class="section-body">
             <form action="">
               <fieldset :class="{ 'is-disabled': sending }" :disabled="sending">
-                <div class="field is-horizontal" v-for="(input, key) in credentials" :key="key">
-                  <div class="field-label is-normal">
-                    <label for="" class="label">{{formatKey(key)}}</label>
-                  </div>
-                  <div class="field-body">
-                    <div class="field">
-                      <input :type="inputTypes[key]" class="input" v-model="credentials[key]">
-                    </div>
-                  </div>
-                </div>
-                
+                <form-input v-for="(input, key) in credentials" :key="key"
+                  v-model="input.value"
+                  :label="input.label"
+                  :inputType="input.type"
+                  :id="input.id"
+                  :validators="input.validators">
+                </form-input>
                 <div class="field is-horizontal">
                   <div class="field-body">
                     <div class="field is-grouped is-grouped-centered">
@@ -40,6 +36,8 @@
 </template>
 
 <script>
+'use strict';
+import FormInput from './inputs/HorizontalFormInput';
 export default {
   props: {
     sending: {
@@ -51,46 +49,70 @@ export default {
   data() {
       return {
           credentials: {
-              currentPassword: '',
-              newPassword: '',
-          },
-          inputTypes: {
-            currentPassword: 'password',
-            newPassword: 'password'
+              currentPassword: {
+                value: '',
+                label: 'current password',
+                id: 'current-password',
+                type: 'password',
+                validators: {
+                  required: true,
+                  alpha_num: true,
+                  min: 8,
+                  max: 20
+                }
+              },
+              newPassword: {
+                value: '',
+                label: 'new password',
+                id: 'new-password',
+                type: 'password',
+                validators: {
+                  required: true,
+                  alpha_num: true,
+                  min: 8,
+                  max: 20
+                }
+              },
           }
       }
   },
 
   methods: {
-      formatKey(key) {
-        const keyToFormat = key.charAt(0).toUpperCase() + key.slice(1);
-        return keyToFormat.replace(/([a-z])([A-Z])/, '$1 $2');
-      },
-      
       changePassword() {
           const { 
             currentPassword, 
             newPassword 
         } = this.credentials;
+        const data = {
+          currentPassword: currentPassword.value,
+          newPassword: newPassword.value
+        }
         this.$emit('update:sending', true);
-        this.$http
-            .post('/users/edit-password', { currentPassword, newPassword })
-            .then(res => {
-                this.$notify({
+        try {
+          const res = await this.$http
+            .post('/users/edit-password', data);
+
+          if (res.status >= 200 && res.status < 400) {
+            this.$notify({
                     group: 'notes',
                     type: 'success',
                     text: 'An email has been dispatched.'
                 });
-                this.$emit('update:sending', false);
-            })
-            .catch(e => {
-              this.$notify({
+            this.$emit('update:sending', false);
+          }
+        }
+        catch (e) {
+          if (e.response && e.response.status === 409) {
+            this.$notify({
                 group: 'notes',
                 type: 'error',
                 text: `${e.response.status}:${e.response.data.message}`
               });
               this.$emit('update:sending', false);
-            })
+          } else {
+            console.log(e);
+          }
+        }
 
       }
   }
