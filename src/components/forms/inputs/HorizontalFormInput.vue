@@ -52,7 +52,7 @@ export default {
     computed: {
       inputClasses() {
         return ['input', {
-          'is-success': !this.errors.has(this.id) || this.value !== '',
+          'is-success': !this.errors.has(this.id) && this.value,
           'is-danger': this.errors.has(this.id) || !this.value
         }];
       },

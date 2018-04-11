@@ -121,6 +121,10 @@ export default {
         background-color: #000;
         font-weight: 700;
         text-transform: uppercase;
+        .submenu {
+          font-weight: normal;
+          text-align: left;
+        }
     }
     .navbar-menu, 
     .navbar-start {

@@ -18,7 +18,7 @@
               <div class="field-body">
                 <div class="field is-grouped is-grouped-centered">
                   <div class="control is-expanded">
-                    <button class="button is-primary is-fullwidth" @click.prevent="changePassword">Submit</button>
+                    <button class="button is-primary is-fullwidth" :disabled="errors.any()" @click.prevent="changePassword">Submit</button>
                   </div>
                   <div class="control is-expanded">
                     <button class="button is-primary is-outlined is-fullwidth">Reset</button>
@@ -39,6 +39,9 @@
   export default {
     name: 'edit-password-form',
     components: { FormInput },
+    $_veeValidate: {
+      validator: 'new'
+    },
     props: {
       sending: {
         type: Boolean,
@@ -78,6 +81,11 @@
     },
 
     methods: {
+      clearForm() {
+        for (let key in this.credentials) {
+          this.credentials[key].value = '';
+        }
+      },
       async changePassword() {
         const {
           currentPassword,
@@ -88,32 +96,40 @@
           newPassword: newPassword.value
         }
         this.$emit('update:sending', true);
-        try {
-          const res = await this.$http
-            .post('/users/edit-password', data);
+        if (!this.errors.any()) {
+          try {
 
-          if (res.status >= 200 && res.status < 400) {
-            this.$notify({
-              group: 'notes',
-              type: 'success',
-              text: 'An email has been dispatched.'
-            });
+            const res = await this.$http
+              .post('/users/edit-password', data);
+
+            if (res.status >= 200 && res.status < 400) {
+              this.$notify({
+                group: 'notes',
+                type: 'success',
+                text: 'An email has been dispatched.'
+              });
+              this.clearForm();
+              this.$emit('update:sending', false);
+            }
+          } catch (e) {
+            if (e.response) {
+              const errorStatus = e.response.status;
+              if (errorStatus >= 400 && errorStatus < 500) {
+                this.$notify({
+                  group: 'notes',
+                  type: 'error',
+                  text: `${e.response.status}:${e.response.data.message}`
+                });
+              }
+            } else {
+              console.log(e);
+            }
             this.$emit('update:sending', false);
-          }
-        } catch (e) {
-          if (e.response && e.response.status === 409) {
-            this.$notify({
-              group: 'notes',
-              type: 'error',
-              text: `${e.response.status}:${e.response.data.message}`
-            });
-            this.$emit('update:sending', false);
-          } else {
-            console.log(e);
           }
         }
 
       }
+
     }
   }
 

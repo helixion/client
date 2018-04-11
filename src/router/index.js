@@ -12,6 +12,7 @@ import Verify from '@/components/views/Verify'
 import ResetPassword from '@/components/views/ResetPassword'
 import Errors from '@/components/Errors';
 import ForumHandler from '@/components/ForumHandler';
+import ManagePost from '@/components/views/ManagePost';
 
 
 const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount();
@@ -29,6 +30,14 @@ const router = new Router({
       component: Home,
       meta: {
         title: 'Best In Slot'
+      }
+    },
+    {
+      path: '/manage-post/create',
+      name: 'manage-post',
+      component: ManagePost,
+      meta: {
+        title: 'Manage Post - Create'
       }
     },
     {

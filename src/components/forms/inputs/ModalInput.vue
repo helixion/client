@@ -102,10 +102,14 @@ export default {
   },
 
   computed: {
-      inputClasses() {
-          return ['input', { 'is-success': !this.errors.has(this.id) || this.value !== '', 'is-danger': this.errors.has(this.id) || !this.value }];
-      }
+    inputClasses() {
+      return ['input', {
+        'is-success': !this.errors.has(this.id) && this.value,
+        'is-danger': this.errors.has(this.id) || !this.value
+      }];
+    }
   }
+
 
 
 };
@@ -115,37 +119,39 @@ export default {
 <style lang="scss">
 .bis-modal {
   .error {
-  font-size: 12px;
-  position: absolute;
-  color: #cacaca;
+    font-size: 12px;
+    position: absolute;
+    color: #cacaca;
+  }
+  .control {
+    position: relative;
+    label {
+      position: absolute;
+      pointer-events: none;
+      color: #cacaca;
+      background-color: #333;
+      font-size: 9pt;
+      top: -9px;
+      left: 5px;
+      z-index: 1000;
+      font-weight: bold;
+      padding: 0 0.3125rem;
+    }
+    .input {
+      background-color: #333;
+      border: 2px solid #555;
+      color: #cacaca;
+      box-shadow: 1px 1px 0 rgba(55, 55, 55, 0.5); // padding: 1px 5px 0;
+      padding-left: 0.55rem;
+      &:focus {
+        outline: none;
+      }
+    }
+    
+  }
 }
 
-.control {
-  position: relative;
-  label {
-    position: absolute;
-    pointer-events: none;
-    color: #cacaca;
-    background-color: #333;
-    font-size: 9pt;
-    top: -9px;
-    left: 5px;
-    z-index: 1000;
-    font-weight: bold;
-    padding: 0 0.3125rem;
-  }
-  .input {
-    background-color: #333;
-    border: 2px solid #555;
-    color: #cacaca;
-    box-shadow: 1px 1px 0 rgba(55, 55, 55, 0.5); // padding: 1px 5px 0;
-    padding-left: 0.55rem;
-    &:focus {
-      outline: none;
-    }
-  }
-}
-}
+
 </style>
 
 
