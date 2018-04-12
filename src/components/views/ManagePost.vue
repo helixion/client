@@ -3,6 +3,7 @@
   <section id="manage-post">
       <div class="container">
           <h1 class="title">Manage Post</h1>
+          <div class="content" v-html="content"></div>
           <form>
               <fieldset :disabled="sending">
                   <div class="field">
@@ -45,7 +46,8 @@
 </template>
 
 <script>
-import TextEditor from '@/components/text-editor/TextEditor';
+// import TextEditor from '@/components/text-editor/TextEditor';
+import TextEditor from '@/components/editor/Editor';
 export default {
   name: 'manage-post',
   components: { TextEditor },

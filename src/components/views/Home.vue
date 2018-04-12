@@ -13,12 +13,14 @@
         </div>
     </div>
     </section>
+    <text-editor></text-editor>
   </div>
 </template>
 
 <script>
 import Post from '@/components/Post';
 import Carousel from '@/components/carousel/Carousel';
+import TextEditor from '@/components/editor/EditorContainer'
 import mock from '@/mock-posts';
 
 const desc = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged";
@@ -27,7 +29,8 @@ export default {
   name: 'home',
   components: { 
     appPost: Post,
-    appCarousel: Carousel 
+    appCarousel: Carousel,
+    TextEditor 
   },
   data () {
     return {

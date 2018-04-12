@@ -6,6 +6,7 @@
 
 <script>
 import Quill from 'quill';
+import {markdown} from 'markdown';
 import defaultOptions from './options';
 
 export default {
@@ -46,8 +47,7 @@ export default {
     initalize() {
       if (this.$el) {
 
-        const options = Object.assign({}, 
-          this.defaultOptions, { markdownShortcuts: { } });
+        const options = Object.assign({}, this.defaultOptions);
 
         this.editor = new Quill(this.$refs.editor, options);
 
@@ -72,7 +72,7 @@ export default {
           const editor = this.editor;
           const text = editor.getText();
           if (html === '<p><br></p>') html = '';
-          this.$emit('input', html);
+          this.$emit('input', markdown.toHTML(html));
           this.$emit('change', { editor, html, text });
         })
       }

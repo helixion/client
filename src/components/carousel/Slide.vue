@@ -36,7 +36,7 @@ export default {
       // return this.truncate(this.slide.desc, 250, true);
       return truncate(this.slide.body, {
         length: 250,
-        separator: /,?+/
+        separator: /,? +/
       })
     }
   }
