@@ -6,6 +6,14 @@
         <h2>Recent News</h2>
       </div>
       <div class="columns is-multiline">
+        <div class="column is-12">
+          <div class="columns">
+            <div class="column"></div>
+            <div class="right-options column">
+              <button class="button is-small is-primary">Create Post</button>
+            </div>
+          </div>
+        </div>
         <div class="column is-12" v-for="(info, index) in mock" :key="index">
           <app-post :id="info.id" :title="info.title" :author="info.author">
             {{info.body}}
@@ -20,7 +28,7 @@
 <script>
 import Post from '@/components/Post';
 import Carousel from '@/components/carousel/Carousel';
-import TextEditor from '@/components/editor/EditorContainer'
+import TextEditor from '@/components/editor/Composer'
 import mock from '@/mock-posts';
 
 const desc = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged";
@@ -70,3 +78,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.right-options {
+  display: flex;
+  justify-content: flex-end;
+}
+</style>

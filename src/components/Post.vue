@@ -65,7 +65,7 @@ export default {
     box-shadow: 1px 1px 5px rgba(55, 55, 55, 0.5);
   }
   .article-header {
-    background-color: #1d1d1d;
+    background-color: #181a1e;
 
     display: flex;
     padding: 0.35rem 0.63rem;
@@ -96,7 +96,7 @@ export default {
   }
   .article-body {
     flex: 1;
-    background-color: #333;
+    background-color: #383b40;
     color: #cacaca;
     padding: 0 0.75rem;
     text-align: left;
