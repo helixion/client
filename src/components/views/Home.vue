@@ -10,7 +10,7 @@
           <div class="columns">
             <div class="column"></div>
             <div class="right-options column">
-              <button class="button is-small is-primary">Create Post</button>
+              <button class="button is-small is-primary" @click.prevent="toggleEditor(true)">Create Post</button>
             </div>
           </div>
         </div>
@@ -21,7 +21,7 @@
         </div>
     </div>
     </section>
-    <text-editor></text-editor>
+    <text-editor :showEditor="showEditor"></text-editor>
   </div>
 </template>
 
@@ -30,6 +30,7 @@ import Post from '@/components/Post';
 import Carousel from '@/components/carousel/Carousel';
 import TextEditor from '@/components/editor/Composer'
 import mock from '@/mock-posts';
+import {mapActions} from 'vuex';
 
 const desc = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged";
 
@@ -64,6 +65,16 @@ export default {
       ],
       mock
     }
+  },
+  computed: {
+    showEditor() {
+      return this.$store.getters.showEditor;
+    }
+  },
+  methods: {
+    ...mapActions([
+      'toggleEditor',
+    ])
   },
   beforeRouteEnter(to, from, next) {
     const { require_login } = to.query;

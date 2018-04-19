@@ -11,11 +11,13 @@ const modules = {
 export default new Vuex.Store({
     state: {
         modal: false,
-        showMobileMenu: false
+        showMobileMenu: false,
+        showEditor: false
     },
     getters: {
         modal: state => state.modal,
         showMobileMenu: state => state.showMobileMenu,
+        showEditor: state => state.showEditor
     },
     mutations: {
         'SET_MODAL_STATE'(state, bool) {
@@ -24,6 +26,9 @@ export default new Vuex.Store({
         'TOGGLE_MOBILE'(state, bool) {
             state.showMobileMenu = bool;
         },
+        'TOGGLE_EDITOR'(state, bool) {
+            state.showEditor = bool;
+        }
     },
     actions: {
         setModal({ commit }, payload) {
@@ -31,7 +36,10 @@ export default new Vuex.Store({
         },
         toggleMobile({state, commit}, bool) {
             commit('TOGGLE_MOBILE', bool);
-        }
+        },
+        toggleEditor({ commit }, bool) {
+            commit('TOGGLE_EDITOR', bool);
+        },
     },
     modules
 })

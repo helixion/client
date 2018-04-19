@@ -1,45 +1,65 @@
 <template>
-  <div id="editor-container" :class="rootClasses" :style="rootStyles">
-    <div class="draft-controls" v-if="hidden">
-        <span class="draft-text">Post draft in progress. Click to resume.</span>
-        <button><i class="fa fa-times fa-2x"></i></button>
-    </div>
-    <div id="resizer" @touchstart.prevent.stop="init" @mousedown.prevent.stop="init" v-if="!hidden"></div>
-    <div class="top-controls">
-      <div class="right-controls">
-        <button class="minimize" @click.prevent="hide">
-          <i class="fa fa-chevron-down"></i>
+  <transition enter-active-class="slide-in-from-bottom" leave-active-class="slide-out-from-bottom">
+    <div id="editor-container" :class="rootClasses" :style="rootStyles" v-show="showEditor">
+      <div class="draft-controls" v-if="hidden">
+        <div class="restore" @click.prevent.stop="expand">
+          <span class="draft-text">Post draft in progress. Click to resume.</span>
+        </div>
+        <button class="editor-close" @click="initCancelPrompt">
+          <i class="fa fa-times fa-2x"></i>
         </button>
       </div>
-    </div>
-    <div :class="contentClasses">
-      <div class="editor-wrappers">
-        <div class="editor-wrapper">
-          <div class="editor-input-wrapper">
-            <input type="text" class="editor-input">
-          </div>
-          <editor v-model="content"></editor>
+      <div id="resizer" @touchstart.prevent.stop="init" @mousedown.prevent.stop="init" v-if="!hidden"></div>
+      <div class="top-controls">
+        <div class="right-controls">
+          <button class="minimize" @click.prevent="hide">
+            <i class="fa fa-chevron-down"></i>
+          </button>
         </div>
-        <div class="preview-wrapper"></div>
+      </div>
+      <div class="editor-modals">
+        <div class="modal-background" v-show="modalType"></div>
+        <component :is="modalType" :modalType.sync="modalType" @closeEditor="closeEditor"></component>
+      </div>
+      <div :class="contentClasses">
+        <div class="editor-wrappers">
+          <div class="editor-wrapper">
+            <div class="editor-input-wrapper">
+              <input type="text" class="editor-input">
+            </div>
+            <editor v-model="content"></editor>
+          </div>
+          <div class="preview-wrapper"></div>
+        </div>
+      </div>
+      <div class="bottom-controls">
+        <div class="left-controls">
+          <button class="control-button is-primary">Create Post</button>
+          <button class="control-button has-outline" @click.prevent="initCancelPrompt">Cancel</button>
+        </div>
+        <div class="right-controls">
+          <a class="show-hide" @click.prevent="togglePreview">{{showHide}}</a>
+        </div>
       </div>
     </div>
-    <div class="bottom-controls">
-      <div class="left-controls">
-        <button class="control-button is-primary">Create Post</button>
-        <button class="control-button has-outline">Cancel</button>
-      </div>
-      <div class="right-controls">
-        <a class="show-hide" @click.prevent="togglePreview">{{showHide}}</a>
-      </div>
-    </div>
-  </div>
+  </transition>
 </template>
 
 <script>
 import Editor from "./Editor";
+import CancelPrompt from "./modals/CancelPrompt";
 export default {
   name: "composer",
-  components: { Editor },
+  components: { 
+    Editor,
+    CancelPrompt 
+  },
+  props: {
+    showEditor: {
+      type: Boolean,
+      required: true
+    }
+  },
   data() {
     return {
       startingPointY: 0,
@@ -50,6 +70,7 @@ export default {
       sending: false,
       isDragging: false,
       draft: null,
+      modalType: '',
       content: "Insert plain text or html here..."
     };
   },
@@ -66,7 +87,7 @@ export default {
         transition:
           "height " +
           (this.isDragging ? "0" : "250") +
-          "ms ease, background 250ms ease, transform 250ms ease, max-width 250ms ease"
+          "ms ease, background 250ms ease, max-width 250ms ease"
       };
     },
     contentClasses() {
@@ -115,19 +136,28 @@ export default {
     },
     hide() {
       this.hidden = true;
-      this.$nextTick(() => {
-        this.draft = document.querySelector(".draft");
-        this.draft.addEventListener("click", this.expand, false);
-      });
     },
-    expand(evt) {
-      evt.preventDefault();
+    expand() {
       this.hidden = false;
-      this.draft.removeEventListener("click", this.expand, false);
-      this.draft = null;
     },
     togglePreview() {
       this.showPreview = !this.showPreview;
+    },
+    initCancelPrompt() {
+      if (this.content) {
+        this.modalType = 'cancel-prompt';
+      }
+    },
+    closeEditor() {
+      this.$store.dispatch('toggleEditor', false);
+      this.modalType = '';
+      setTimeout(() => {
+        this.$nextTick(() => {
+          this.hidden = false;
+          this.showPreview = true;
+          this.content = "Insert plain text or html here...";
+        })
+      }, 250);
     }
   }
 };
@@ -248,7 +278,12 @@ export default {
       outline: none;
     }
   }
-
+  .editor-modals {
+    position: relative;
+    .modal-background {
+      position: fixed;
+    }
+  }
   .editor-area {
     margin: 0 auto;
     padding: 5px 15px;
@@ -296,6 +331,10 @@ export default {
         text-align: left;
         flex: 1;
       }
+      .restore {
+        width: 100%;
+        height: 100%;
+      }
   }
   
   .top-controls,
@@ -319,4 +358,6 @@ export default {
     outline: none;
   }
 }
+
+@import '../../scss/animations/slide-from-bottom';
 </style>

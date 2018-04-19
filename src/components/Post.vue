@@ -8,13 +8,11 @@
         <h6 class="title is-4">{{title}}</h6>
         <small>Posted by {{author}} on {{formattedDate}}</small>
       </span>
-      <i :class="chevronState" @click.prevent="show = !show"></i>
+      <i :class="chevronState" @click.prevent="toggleTransition"></i>
     </div>
-    <transition mode="out-in" enter-active-class="slide-down" leave-active-class="slide-up">
-      <div class="article-body" v-show="show">
+    <div class="article-body" ref="article" :style="{ height, transition }">
         <slot></slot>
-      </div>
-    </transition>
+    </div>
   </article>
 </template>
 
@@ -31,21 +29,40 @@ export default {
 
   data() {
     return {
-      show: true
+      height: '',
+      transition: ''
     };
+  },
+
+  mounted() {
+    this.height = `${this.$refs.article.scrollHeight}px`;
   },
 
   computed: {
     chevronState() {
       return [
         "fa",
-        { "fa-chevron-up": this.show, "fa-chevron-down": !this.show }
+        { "fa-chevron-up": this.height, "fa-chevron-down": !this.height }
       ];
     },
 
     formattedDate() {
       const date = new Date();
       return format(date.toISOString(), "dddd, MMMM DD, YYYY");
+    }
+  },
+
+  methods: {
+    toggleTransition() {
+      const height = this.$refs.article.scrollHeight;
+      this.transition = "height 250ms ease";
+      this.height = this.height? '' : `${height}px`;
+
+      const timeout = setTimeout(() => {
+        this.$nextTick(() => {
+          this.transition = '';
+        })
+      }, 250);
     }
   }
 };
@@ -100,32 +117,9 @@ export default {
     color: #cacaca;
     padding: 0 0.75rem;
     text-align: left;
-  }
-}
-.slide-down {
-  animation: slideInDown 0.15s linear forwards;
-}
-
-.slide-up {
-  animation: slideOutUp 0.15s linear forwards;
-}
-
-@keyframes slideInDown {
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(0);
+    height: 0;
   }
 }
 
-@keyframes slideOutUp {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-100%);
-  }
-}
-
+@import '../scss/animations/slide-from-top';
 </style>

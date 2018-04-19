@@ -27,15 +27,23 @@
             <router-link class="navbar-item" to="/">Recruitment</router-link>
             <router-link class="navbar-item" to="/">Media</router-link>
             <router-link class="navbar-item" to="/">Discussion</router-link>
-            <expand>
+            <!-- <expand>
               <a href="" slot="header">Tools</a>
               <ul class="submenu" slot="links">
                 <li class="navbar-item">Bless Calculator</li>
                 <li class="navbar-item">CF Calcaulator</li>
                 <li class="navbar-item">Rift Calculator</li>
               </ul>
-            </expand>  
+            </expand>  -->
           </div>
+          <accordion>
+            <a slot="name">Tools</a>
+            <ul class="submenu">
+                <li class="navbar-item">Bless Calculator</li>
+                <li class="navbar-item">CF Calcaulator</li>
+                <li class="navbar-item">Rift Calculator</li>
+            </ul>
+          </accordion>  
         </div>
     </nav>
   </transition>
@@ -45,11 +53,13 @@
 <script>
 'use strict';
 import Expand from './Expand';
+import Accordion from '@/components/Accordion';
 import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'mobile-menu',
   components: {
-    Expand
+    Expand,
+    Accordion
   },
   methods: {
     ...mapActions([
