@@ -10,7 +10,10 @@
           <div class="columns">
             <div class="column"></div>
             <div class="right-options column">
-              <button class="button is-small is-primary" @click.prevent="toggleEditor(true)">Create Post</button>
+              <button class="button is-small is-primary" @click.prevent="toggleEditor(true)">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                  <span>Create Post</span>
+              </button>
             </div>
           </div>
         </div>
@@ -28,7 +31,7 @@
 <script>
 import Post from '@/components/Post';
 import Carousel from '@/components/carousel/Carousel';
-import TextEditor from '@/components/editor/Composer'
+import TextEditor from '@/components/editor/ComposerNoPreview'
 import mock from '@/mock-posts';
 import {mapActions} from 'vuex';
 
@@ -91,8 +94,17 @@ export default {
 </script>
 
 <style lang="scss">
-.right-options {
-  display: flex;
-  justify-content: flex-end;
+
+#recent-news {
+  .column:last-child {
+    margin-bottom: 1.5rem;
+  }
+  .right-options {
+    display: flex;
+    justify-content: flex-end;
+    span {
+      margin-left: 0.5rem;
+    }
+  }
 }
 </style>

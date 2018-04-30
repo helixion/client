@@ -4,6 +4,7 @@
 
 <script>
 import { init, exec } from "pell";
+import actions from './actions';
 import dompurify from "dompurify";
 export default {
   props: {

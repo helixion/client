@@ -2,52 +2,50 @@
   <transition enter-active-class="slide-in-from-left" leave-active-class="slide-out-from-left" mode="out-in">
     <nav id="mobile" class="navbar is-black">
       <div class="navbar-brand">
-          <img src="http://localhost/images/bis-logo.png" alt="">
-          <span class="delete" @click.prevent="closeMobileMenu(false)"></span>
-        </div>
-        <div class="navbar-head" v-if="!isAuthenticated">
-          <a href="" class="navbar-item" @click.prevent="toggle(!modal)">
-            <i class="fa fa-user-circle"></i>
-            Sign In / Up
-          </a>
-        </div>
-        <div class="navbar-head" v-else>
-          <expand v-if="currentUser">
-            <a href="" class="navbar-item" slot="header">{{currentUser.username}}</a>
-            <ul class="submenu" slot="links">
-              <router-link to="/myaccount" tag="li" class="navbar-item"><a>Profile</a></router-link>
-              <li class="navbar-item" @click.prevent="invalidate"><a>Logout</a></li>
-            </ul>  
-          </expand>
-        </div>
-        <div class="navbar-menu">
-          <div class="navbar-start">
-            <router-link class="navbar-item" to="/">Home</router-link>
-            <router-link class="navbar-item" to="/">History</router-link>
-            <router-link class="navbar-item" to="/">Recruitment</router-link>
-            <router-link class="navbar-item" to="/">Media</router-link>
-            <router-link class="navbar-item" to="/">Discussion</router-link>
-            <!-- <expand>
-              <a href="" slot="header">Tools</a>
-              <ul class="submenu" slot="links">
-                <li class="navbar-item">Bless Calculator</li>
-                <li class="navbar-item">CF Calcaulator</li>
-                <li class="navbar-item">Rift Calculator</li>
-              </ul>
-            </expand>  -->
-          </div>
+        <img src="http://localhost/images/bis-logo.png" alt="">
+        <span class="delete" @click.prevent="closeMobileMenu(false)"></span>
+      </div>
+      <div class="navbar-head" v-if="!isAuthenticated">
+        <a href="" class="navbar-item" @click.prevent="toggle(!modal)">
+          <i class="fa fa-user-circle"></i>
+          Sign In / Up
+        </a>
+      </div>
+      <div class="navbar-head" v-else>
+        <accordion v-if="currentUser">
+          <a href="" class="navbar-item" slot="name">{{currentUser.username}}</a>
+          <ul class="submenu">
+            <router-link to="/myaccount" tag="li" class="navbar-item">
+              <a>Profile</a>
+            </router-link>
+            <li class="navbar-item" @click.prevent="invalidate">
+              <a>Logout</a>
+            </li>
+          </ul>
+        </accordion>
+      </div>
+      <div class="navbar-menu">
+        <div class="navbar-start">
+          <router-link class="mobile-nav-item navbar-item" to="/">Home</router-link>
+          <router-link class="mobile-nav-item navbar-item" to="/">History</router-link>
+          <router-link class="mobile-nav-item navbar-item" to="/">Recruitment</router-link>
+          <router-link class="mobile-nav-item navbar-item" to="/">Media</router-link>
+          <router-link class="mobile-nav-item navbar-item" to="/">Discussion</router-link>
           <accordion>
             <a slot="name">Tools</a>
             <ul class="submenu">
-                <li class="navbar-item">Bless Calculator</li>
-                <li class="navbar-item">CF Calcaulator</li>
-                <li class="navbar-item">Rift Calculator</li>
+              <li class="navbar-item">Bless Calculator</li>
+              <li class="navbar-item">CF Calcaulator</li>
+              <li class="navbar-item">Rift Calculator</li>
             </ul>
-          </accordion>  
+          </accordion>
         </div>
+
+      </div>
     </nav>
   </transition>
 </template>
+
 
 
 <script>
@@ -144,9 +142,16 @@ export default {
     }
     .navbar-item {
         color: #cacaca;
+        
     }
     .navbar-menu {
         background-color: inherit;
+        box-shadow: none;
+    }
+    .mobile-nav-item {
+      background-color: #0b0b0b;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.3);
+      border-bottom: 1px solid #222;
     }
 }
 

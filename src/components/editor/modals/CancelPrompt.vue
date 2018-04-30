@@ -13,8 +13,8 @@
             <div class="columns">
                 <div class="column">
                     <div class="buttons">
-                        <button class="button is-danger" @click="$emit('closeEditor')">Proceed</button>
-                        <button class="button is-primary" @click="$emit('update:modalType', '')">Cancel</button>
+                        <button class="button is-primary" @click="$emit('closeEditor')">Proceed</button>
+                        <button class="button" @click="$emit('update:modalType', '')">Cancel</button>
                     </div>
                 </div>
             </div>

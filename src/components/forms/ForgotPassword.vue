@@ -12,7 +12,7 @@
               <button :class="buttonClasses" @click.prevent="sendEmail" :disabled="!email || errors.any()">Send</button>
             </div>
             <div class="control is-expanded">
-              <button class="button is-outlined is-fullwidth is-medium" @click.prevent="email = ''">Reset</button>
+              <button class="button is-outlined is-fullwidth is-small" @click="$emit('setForm', 'app-login')">Cancel</button>
             </div>
           </div>
         </fieldset>
@@ -48,7 +48,7 @@ export default {
 
   computed: {
     buttonClasses() {
-      return ['button is-fullwidth is-medium is-info', { 'is-loading': this.sending}];
+      return ['button is-fullwidth is-small is-primary', { 'is-loading': this.sending}];
     }
   },
 

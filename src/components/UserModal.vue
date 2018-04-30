@@ -69,10 +69,11 @@ export default {
 
 <style lang="scss">
 $bis-overlay-background: rgba(22,22,22,0.9);
-$bis-modal-body-background: #333;
-$bis-modal-tab-active: #222;
+$bis-modal-body-background: #2F3034;
+$bis-modal-tab-active: #2F3034;
 $bis-modal-footer-background: #222;
 $bis-primary-font-color: #cacaca;
+$bis-model-head-background-color: #181a1e;
 
 #modal-overlay {
     background-color: $bis-overlay-background;
@@ -87,10 +88,13 @@ $bis-primary-font-color: #cacaca;
        
     }
     #register {
-        max-height: 40rem;
+        max-height: 43rem;
     }
     #password-recovery {
-        max-height: 20rem;
+        max-height: 25rem;
+        .field {
+            margin-top: 0;
+        }
     }
     #login, 
     #register, 
@@ -116,7 +120,9 @@ $bis-primary-font-color: #cacaca;
             top: 5px;
             right: 5px;
         }
-        .bis-modal-head > ul {
+        .bis-modal-head {
+            background-color: $bis-model-head-background-color;
+            ul {
             list-style-type: none;
             padding: 0;
             margin: 0;
@@ -133,11 +139,15 @@ $bis-primary-font-color: #cacaca;
                 }
             }
         }
+        } 
         .bis-modal-body {
             flex: 1;
             display: flex;
             flex-direction: column;
             padding: 5px 20px;
+            fieldset {
+                margin-top: 2.5rem;
+            }
             .bis-icon {
                 display: flex;
                 justify-content: center;

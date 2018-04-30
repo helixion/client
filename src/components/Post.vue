@@ -8,9 +8,10 @@
         <h6 class="title is-4">{{title}}</h6>
         <small>Posted by {{author}} on {{formattedDate}}</small>
       </span>
-      <i :class="chevronState" @click.prevent="toggleTransition"></i>
+      <i class="fa fa-chevron-up" @click.prevent="hideBody" v-if="show"></i>
+      <i class="fa fa-chevron-down" @click.prevent="showBody" v-else></i>
     </div>
-    <div class="article-body" ref="article" :style="{ height, transition }">
+    <div class="article-body" ref="article" :style="{ height }">
         <slot></slot>
     </div>
   </article>
@@ -30,19 +31,16 @@ export default {
   data() {
     return {
       height: '',
-      transition: ''
+      timeout: null,
+      show: true
     };
-  },
-
-  mounted() {
-    this.height = `${this.$refs.article.scrollHeight}px`;
   },
 
   computed: {
     chevronState() {
       return [
         "fa",
-        { "fa-chevron-up": this.height, "fa-chevron-down": !this.height }
+        { "fa-chevron-up": this.show, "fa-chevron-down": !this.show }
       ];
     },
 
@@ -53,16 +51,32 @@ export default {
   },
 
   methods: {
-    toggleTransition() {
-      const height = this.$refs.article.scrollHeight;
-      this.transition = "height 250ms ease";
-      this.height = this.height? '' : `${height}px`;
-
-      const timeout = setTimeout(() => {
-        this.$nextTick(() => {
-          this.transition = '';
-        })
-      }, 250);
+    showBody() {
+      /*we're transitioning to auto, for this to work we need to manually set an absolute value, 
+      let the transition play out and THEN remove the hard value and let auto take over.
+      we set a timer on the next tick (dom update) with 250ms to let the transition complete.*/
+      this.height = `${this.$refs.article.scrollHeight}px`;
+      this.show = true;
+      // clearInterval(this.timeout);
+      this.$nextTick(() => {
+        this.timeout = setTimeout(() => {
+          this.height = "";
+        }, 250);
+      });
+    },
+    hideBody() {
+      /*we're transition from auto to 0, for this to work we need to first set the height to a value it can transition from.
+      We set the height to the scrollHeight, just like we did when were transition yo auto, on the next dom update we immediately
+      set the height to 0 in a timeout giving the transition time to kick in. By storing the timeout in a property we can cancel
+      previous transition without most of the weird side effects.*/
+      this.height = `${this.$refs.article.scrollHeight}px`;
+      this.show = false;
+      clearInterval(this.timeout);
+      this.$nextTick(() => {
+        this.timeout = setTimeout(() => {
+          this.height = "0px";
+        }, 50);
+      });
     }
   }
 };
@@ -73,14 +87,10 @@ export default {
   position: relative;
   width: 100%;
   top: 0;
-  transition: all 0.15s ease;
-  margin-bottom: 1rem;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  &.open {
-    box-shadow: 1px 1px 5px rgba(55, 55, 55, 0.5);
-  }
+  box-shadow: 1px 2px 5px rgba(0,0,0,0.7);
   .article-header {
     background-color: #181a1e;
 
@@ -96,6 +106,7 @@ export default {
     h6 {
       margin-top: 0;
       margin-bottom: 0;
+      text-align: left;
     }
 
     .avatar {
@@ -117,7 +128,8 @@ export default {
     color: #cacaca;
     padding: 0 0.75rem;
     text-align: left;
-    height: 0;
+    height: auto;
+    transition: height 250ms ease;
   }
 }
 

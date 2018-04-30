@@ -123,28 +123,59 @@ export default {
     position: absolute;
     color: #cacaca;
   }
-  .control {
-    position: relative;
-    label {
+  label {
       position: absolute;
       pointer-events: none;
       color: #cacaca;
-      background-color: #333;
+      background: transparent;
       font-size: 9pt;
       top: -9px;
       left: 5px;
       z-index: 1000;
       font-weight: bold;
       padding: 0 0.3125rem;
+      &:before, :after {
+        position: absolute;
+        
+        display: block;
+        width: 100%;
+        height: 50%;
+        padding: 0.50rem 0.35rem;
+        z-index: -1;
+      }
+      
     }
+  label:before {
+   content: "";
+   background-color: #2F3034;
+   top: 0;
+   left: 0;
+  }
+  label:after {
+    content: "";
+    background-color: #383b40;
+    display: block;
+    width: 100%;
+    height: 10px;
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    z-index: -1;
+  }  
+  .control {
+    position: relative;
+    
     .input {
-      background-color: #333;
+      background-color: #383b40;
       border: 2px solid #555;
       color: #cacaca;
       box-shadow: 1px 1px 0 rgba(55, 55, 55, 0.5); // padding: 1px 5px 0;
       padding-left: 0.55rem;
       &:focus {
         outline: none;
+      }
+      &.is-danger {
+        border-color: red !important;
       }
     }
     

@@ -13,8 +13,8 @@ Vue.config.productionTip = false
 Vue.use(VeeValidate, { inject: false });
 Vue.use(Notifications);
 
-const namespace = 'api/v1';
-axios.defaults.baseURL = 'http://localhost:7700/' + namespace;
+const namespace = 'v1';
+axios.defaults.baseURL = 'http://localhost:3000/' + namespace;
 
 Object.defineProperties(Vue.prototype, {
   '$http': {
