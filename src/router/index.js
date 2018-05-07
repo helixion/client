@@ -44,6 +44,9 @@ const router = new Router({
       path: '/verify',
       name: 'verify',
       component: Verify,
+      meta: {
+        title: 'Verify your account'
+      }
     },
     {
       path: '/myaccount',

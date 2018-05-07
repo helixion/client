@@ -18,59 +18,64 @@
 </template>
 
 <script>
-import {post} from "axios";
+import { put, post } from "axios";
 
 export default {
-
   $_veeValidate: {
     validator: "new"
   },
 
   async beforeRouteEnter(to, from, next) {
-
+    const { username, key } = to.query;
     try {
-        const response = await post(`/users/activate/`, { key: to.query.key });
+      const response = await put("/users/verify", { username, key });
 
-        if (response.status >= 200 && response.status < 400) {
-            next(vm => {
-                    if (response.data.approved) {
-                        vm.success = true;
-                    } else if (response.data.expired) {
-                        vm.success = false;
-                    }
-            });
-        
-        }
-    }
-    catch (e) {
-        if (e.response) {
-            next(`/error/${e.response.status}`);
-        } 
+      next(vm => {
+          if (response.data.approved) {
+            vm.success = true;
+          } else if (response.data.expired) {
+            vm.success = false;
+          }
+        });
+        console.log(response);
+    } catch (e) {
+      if (e.response && e.status > 400) {
+        next(`/error/${e.response.status}`);
+      } else {
+        next(vm => {
+          vm.success = false;
+        });
+      }
+      console.log(e.response);
     }
   },
 
   data() {
     return {
-      success: false
-    }
+      success: false,
+    };
   },
 
   methods: {
     async resend() {
-        try {
-            const {response: { data: { user: { email }}}} = await this.$http.post(`/resend/${this.route.query.key}`)
-            if (email) {
-                this.notify({
-                    group: "notes",
-                    type: 'success',
-                    title: "Success!",
-                    text: 'An email has been dispatched to ${email}'
-                })
-            }
-        }
-        catch (e) {
-            Object.keys(e.response).forEach(err => console.log(e.response[err]));
-        }
+      let response,
+        username = this.$route.query.username;
+      try {
+        response = await this.$http.post(
+          `/verify/resend/?username=${username}`
+        );
+      } catch (e) {
+        Object.keys(e.response).forEach(err => console.log(e.response[err]));
+      }
+
+      if (response.data.email) {
+        this.notify({
+          group: "notes",
+          type: "success",
+          title: "Success!",
+          text: `An email has been dispatched to ${response.data.email}`
+        });
+      }
     }
   }
 };
@@ -90,7 +95,8 @@ export default {
     }
   }
   .content {
-    h1, h3 {
+    h1,
+    h3 {
       color: #cacaca;
     }
     text-align: center;

@@ -116,16 +116,18 @@ export default {
             this.clearForm();
           })
           .catch(e => {
-            this.sending = false;
-            // this.$notify({
-            //   group: 'notes',
-            //   type: 'danger',
-            //   title: "User already exists.",
-            //   text: "Apparently the user already exists. Please try again.",
-            //   duration: 3000
-            // })
+            if (e) {
+              this.sending = false;
+            this.$notify({
+              group: 'notes',
+              type: 'danger',
+              title: "User already exists.",
+              text: "Apparently the user already exists. Please try again.",
+              duration: 3000
+            })
             Object.keys(e.response)
               .forEach(err => console.log(e.response[err]));
+            }
           });
       }
     },
