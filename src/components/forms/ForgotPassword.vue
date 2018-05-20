@@ -20,6 +20,7 @@
       <div class="content" v-else>
         <h1>An email has been dispatched to address on your account.</h1>
         <p>We've received an email recovery request, in order to confirm this request please follow the instructions provided.</p>
+        <button class="button is-fullwidth is-medium is-primary" @click.prevent="success = false">Go Back</button>
       </div>
   </div>
 </template>
@@ -58,18 +59,23 @@ export default {
         const email = this.email;
         this.sending = true;
         try {
-            const res = await this.$http.post(`/users/${email}/forgot-password`);
+            const res = await this.$http.post(`/users/reset-password`, { email });
             if (res.status >= 200 && res.status < 400) {
                 this.sending = false;
                 this.email = '';
                 this.success = true;
             }
+            console.log(res);
         }
         catch (e) {
             if (e.response) {
-              Object.keys(e.response).forEach(err =>
-                console.log(e.response[err])
-              );
+              this.sending = false;
+              this.success = false;
+              this.$notify({
+                group: 'notes',
+                type: 'danger',
+                text: `${e.response.status}:${e.response.data.message}`
+              })
             }
         }
       }

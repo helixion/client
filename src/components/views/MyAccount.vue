@@ -25,40 +25,27 @@
 </template>
 
 <script>
-'use strict';
-import format from 'date-fns/format';
-import EditPasswordForm from '@/components/forms/EditPasswordForm';
-import EditEmailForm from '@/components/forms/EditEmailForm';
-
+"use strict";
+import format from "date-fns/format";
+import EditPasswordForm from "@/components/forms/EditPasswordForm";
+import EditEmailForm from "@/components/forms/EditEmailForm";
 
 export default {
-  name: 'MyAccount',
+  name: "MyAccount",
   components: { EditPasswordForm, EditEmailForm },
 
   beforeRouteEnter(to, from, next) {
-    const { action, key } = to.query;
+    const { action, type, key, username } = to.query;
     next(vm => {
       if (!vm.isAuthenticated) {
         vm.$router.push("/?require_login=true");
-      } else if (action === 'password-verify') {
-        vm.$http
-          .post('/users/edit-password/verify', { key })
-          .then(res => {
-            vm.$notify({
-              group: 'notes',
-              type: 'success',
-              subject: 'Password successfully changed.',
-              text: 'Your password has been succesfully changed.'
-            })
-          })
-          .catch(e => {
-            vm.$notify({
-              group: 'notes',
-              type: 'error',
-              subject: 'Error Processing request,',
-              text: `${e.response.status}:${e.response.data.message}`
-            })
-          })
+      } else if (action === "edit") {
+        const url =
+          type === "password"
+            ? "/users/update/password"
+            : "/users/update/email";
+        const data = type === "password" ? { username, key } : { key };
+        vm.saveChanges(url, data);
       }
     });
   },
@@ -66,7 +53,7 @@ export default {
   data() {
     return {
       sending: false
-    }
+    };
   },
 
   watch: {
@@ -85,42 +72,64 @@ export default {
       return this.$store.getters.currentUser;
     },
     date() {
-      return format(this.currentUser.created_at, 'dddd, MMMM DD, YYYY');
+      return format(this.currentUser.created_at, "dddd, MMMM DD, YYYY");
+    }
+  },
+
+  methods: {
+    saveChanges(url, data) {
+      this.$http
+        .put(url, data)
+        .then(res => {
+          this.$notify({
+            group: "notes",
+            type: "success",
+            subject: res.data.subject,
+            text: res.data.message
+          });
+        })
+        .catch(e => {
+          this.$notify({
+            group: "notes",
+            type: "error",
+            subject: "Error Processing request,",
+            text: `${e.response.status}:${e.response.data.message}`
+          });
+        });
     }
   }
 };
 </script>
 
 <style lang="scss">
-
 .avatar {
-    img {
-      border-radius: 50%;
-    }
+  img {
+    border-radius: 50%;
   }
+}
 
 #edit-password {
   margin-top: 1.5rem;
 }
 
 .section-head {
-    border-left: 3px solid #3f88c5;
-    background-color: #222;
-    padding: 5px;
-    h1,
-    h2,
-    h3,
-    h4 {
-      color: #cacaca;
-    }
+  border-left: 3px solid #3f88c5;
+  background-color: #222;
+  padding: 5px;
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: #cacaca;
   }
+}
 
-  .section-body {
-    padding: 20px;
-    background-color: #333;
-    border-left: 3px solid #555;
-    label {
-      color: #cacaca;
-    }
+.section-body {
+  padding: 20px;
+  background-color: #333;
+  border-left: 3px solid #555;
+  label {
+    color: #cacaca;
   }
+}
 </style>

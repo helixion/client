@@ -30,29 +30,37 @@ export default {
     try {
       const response = await put("/users/verify", { username, key });
 
-      next(vm => {
-          if (response.data.approved) {
-            vm.success = true;
-          } else if (response.data.expired) {
-            vm.success = false;
-          }
-        });
-        console.log(response);
-    } catch (e) {
-      if (e.response && e.status > 400) {
-        next(`/error/${e.response.status}`);
-      } else {
-        next(vm => {
-          vm.success = false;
-        });
+      if (response.status >= 200 && response.status < 304) {
+        next(vm => vm.success = true);
       }
-      console.log(e.response);
+      console.log(response);
+    } catch (e) {
+      if (e && e.response) {
+        switch (e.response.status) {
+          case 422:
+            next(vm => {
+              vm.success = false;
+            });
+          case 404:
+            next(`/error/404`);
+            break;
+          case 400:
+            next(vm => {
+              vm.success = false;
+            });
+            break;
+          default:
+            next(`/error/${e.response.status}`);
+            break;
+        }
+        console.log(e.response);
+      }
     }
   },
 
   data() {
     return {
-      success: false,
+      success: false
     };
   },
 

@@ -158,7 +158,7 @@ export default {
 <style lang="scss" scoped>
 #editor-container {
   display: flex;
-  background-color: #181a1e;
+  background-color: #0f0f0f;//#181a1e;
   flex-direction: column;
   max-width: 1475px;
   min-height: 230px;
@@ -175,7 +175,7 @@ export default {
   #resizer {
     padding: 4px 0;
     cursor: row-resize;
-    background-color: #0a0b0c;
+    background-color: #0a0a0a;//#0a0b0c;
     &:before {
         content: '';
         display: block;
@@ -337,7 +337,7 @@ export default {
   margin-bottom: 0.75rem;
 }
 .editor-input {
-  background-color: #1f2226;
+  background-color: #1f1f1f;//#1f2226;
   color: #cacaca;
   padding: 0.5rem 0.25rem;
   border: none;

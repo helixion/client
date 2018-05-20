@@ -16,51 +16,52 @@
 </template>
 
 <script>
-import {post} from 'axios';
+import { put } from "axios";
 
 export default {
   beforeRouteEnter(to, from, next) {
-      const {email, code} = to.query;
-      post(`/users/${email}/reset-password`,  {code})
-        .then(res => {
-            next(vm => {
-                if (vm.isAuthenticated) {
-                    vm.$router.push('errors/404');
-                } else {
-                    vm.email = res.data.user.email;
-                }
-            }) 
-        })
-        .catch(e => {
-            next('/404')
+    const { username, key } = to.query;
+    put(`/users/update/password`, { username, key })
+      .then(res => {
+        next(vm => {
+          if (vm.isAuthenticated) {
+            vm.$router.push("errors/404");
+          } else {
+            vm.email = res.data.user.email;
+          }
         });
+      })
+      .catch(e => {
+        next("errors/404");
+      });
   },
 
   data() {
-      return {
-          email: ''
-      }
+    return {
+      email: ""
+    };
   },
-  
+
   computed: {
-      isAuthenticated() {
-          return this.$store.getters.isAuthenticated;
-      }
+    isAuthenticated() {
+      return this.$store.getters.isAuthenticated;
+    }
   }
-}
+};
 </script>
 
 <style lang="scss">
 .status {
-    font-size: 10rem;
+  font-size: 10rem;
 }
 
-.status, .content {
-    text-align: center;
+.status,
+.content {
+  text-align: center;
 }
 
 h2 {
-    color: #cacaca !important;
+  color: #cacaca !important;
 }
 </style>
 

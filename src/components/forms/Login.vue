@@ -30,23 +30,23 @@
 </template>
 
 <script>
-'use strict';
+"use strict";
 
-import Input from './inputs/ModalInput';
+import Input from "./inputs/ModalInput";
 
 export default {
   components: { appInput: Input },
 
   $_veeValidate: {
-      validator: 'new'
+    validator: "new"
   },
-  
+
   data() {
-      return {
-          email: '',
-          password: '',
-          sending: false
-      }
+    return {
+      email: "",
+      password: "",
+      sending: false
+    };
   },
 
   computed: {
@@ -56,7 +56,10 @@ export default {
     },
 
     buttonClasses() {
-      return ['button is-medium is-fullwidth is-info', { 'is-loading': this.sending}];
+      return [
+        "button is-medium is-fullwidth is-info",
+        { "is-loading": this.sending }
+      ];
     }
   },
 
@@ -65,41 +68,67 @@ export default {
       const { email, password } = this.$data;
       this.sending = true;
       try {
-        const res = await this.$store
-          .dispatch('authenticate', { email, password });
-          
-        if (res.status >= 200 && res.status < 400) {
+        const res = await this.$store.dispatch("authenticate", {
+          email,
+          password
+        });
+
+        if (res.status >= 200 && res.status < 304) {
           this.sending = false;
-          this.$router.push('/myaccount');
           this.clearForm();
         }
-      }
-      catch (e) {
-        if (e.response) {
-          this.sending = false;
-            this.$notify({
-              group: 'notes',
-              type: 'danger',
-              text: `${e.response.status}:${e.response.message}`
-            })
-            console.log(e.response.data);
-        } else {
-          console.log(e);
+      } catch (e) {
+        if (e.response.status) {
+          this.$notify({
+                group: "notes",
+                type: "danger",
+                text: e.response.data.message
+              });
+          // switch (e.response.status) {
+          //   case 404:
+          //     this.$notify({
+          //       group: "notes",
+          //       type: "danger",
+          //       text: "User credentials invalid or user doesn't exist."
+          //     });
+          //     break;
+          //   case 403:
+          //     this.$notify({
+          //       group: "notes",
+          //       type: "danger",
+          //       text:
+          //         "Too many failed login attempts. Your account has been locked for 6 hours. To regain access to your account, please reset your password."
+          //     });
+          //     break;
+          //   case 400:
+          //     this.$notify({
+          //       group: "notes",
+          //       type: "danger",
+          //       text: "Password was incorrect."
+          //     });
+          //     break;
+          //   default:
+          //     this.$notify({
+          //       group: "notes",
+          //       type: "danger",
+          //       text: "Internal Server Error"
+          //     });
+          //     break;
+          // }
         }
-      } 
-        
+        this.sending = false;
+      }
     },
 
     clearForm() {
       for (let key in this.$data) {
-        if (typeof this.$data[key] === 'string') {
-          this.$data[key] = '';
+        if (typeof this.$data[key] === "string") {
+          this.$data[key] = "";
         }
       }
     }
   }
-
-}
+};
 </script>
 
 

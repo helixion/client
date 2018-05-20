@@ -92,7 +92,7 @@ export default {
   flex-direction: column;
   box-shadow: 1px 2px 5px rgba(0,0,0,0.7);
   .article-header {
-    background-color: #181a1e;
+    background-color: #0f0f0f;//#181a1e;
 
     display: flex;
     padding: 0.35rem 0.63rem;
@@ -124,7 +124,7 @@ export default {
   }
   .article-body {
     flex: 1;
-    background-color: #383b40;
+    background-color: #1f1f1f; //#383b40
     color: #cacaca;
     padding: 0 0.75rem;
     text-align: left;

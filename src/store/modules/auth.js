@@ -27,26 +27,23 @@ export const mutations = {
 
 export const actions = {
    async authenticate({ dispatch, commit }, { email, password }) {
-        try {
-            const response = await axios.post('/users/login', {
-              email,
-              password
-            });
+    const response = await axios.post('/users/login', {
+        email,
+        password
+      });
 
-            if (response.status >= 200 && response.status < 400) {
-              const token = response.data['access_token'];
-              localStorage.setItem('bis_access_token', token);
-              axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-              dispatch('setAuthentication', true);
-              dispatch('setCurrentUser');
-            }
-
-        } catch (e) {
-            if (e.response) {
-                Object.keyts(e.response)
-                    .forEach(err => console.log(e.response[err]));
-            }
-        }
+      if (response.status >= 200 && response.status < 400) {
+        const token = response.data['access_token'];
+        localStorage.setItem('bis_access_token', token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        dispatch('setModal', false);
+        setTimeout(() => {
+          dispatch('setAuthentication', true);
+          dispatch('setCurrentUser');
+        }, 10);
+      }
+      console.log(response);
+      
         
     },
 

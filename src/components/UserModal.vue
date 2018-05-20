@@ -91,7 +91,7 @@ $bis-model-head-background-color: #181a1e;
         max-height: 43rem;
     }
     #password-recovery {
-        max-height: 25rem;
+        max-height: 28rem;
         .field {
             margin-top: 0;
         }

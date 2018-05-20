@@ -102,7 +102,7 @@ export default {
 </script>
 
 <style lang="scss">
-$pell-actionbar-color: #0a0b0c;
+$pell-actionbar-color: #0a0a0a;
 $pell-content-height: 100%;
 #editor {
   display: flex;
@@ -115,7 +115,7 @@ $pell-content-height: 100%;
   text-align: left;
 }
 .pell-content {
-  background-color: #1f2226;
+  background-color: #1f1f1f;//#1f2226;
   color: #cacaca;
   flex: 1 1 100%;
   height: 100%;

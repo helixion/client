@@ -101,7 +101,7 @@ export default {
     box-shadow: 1px 1px 3px -2px rgba(0,0,0,0.5);
     min-width: 256px;
     height: 100%;
-    z-index: 11;
+    z-index: 101;
     display: flex;
     flex-direction: column;
     .navbar-brand {
@@ -150,7 +150,7 @@ export default {
     }
     .mobile-nav-item {
       background-color: #0b0b0b;
-      box-shadow: 0 1px 0 rgba(255,255,255,0.3);
+      // box-shadow: 0 1px 0 rgba(255,255,255,0.3);
       border-bottom: 1px solid #222;
     }
 }

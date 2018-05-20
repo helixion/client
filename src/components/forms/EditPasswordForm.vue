@@ -100,7 +100,7 @@
           try {
 
             const res = await this.$http
-              .post('/users/edit-password', data);
+              .post('/users/update/password', data);
 
             if (res.status >= 200 && res.status < 400) {
               this.$notify({
