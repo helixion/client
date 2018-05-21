@@ -1,20 +1,20 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
-import VeeValidate from 'vee-validate'
-import Notifications from 'vue-notification'
-import App from './App'
-import router from './router'
-import store from './store'
-import axios from 'axios'
+import Vue from "vue";
+import VeeValidate from "vee-validate";
+import Notifications from "vue-notification";
+import App from "./App";
+import router from "./router";
+import store from "./store";
+import axios from "axios";
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 Vue.use(VeeValidate, { inject: false });
 Vue.use(Notifications);
 
-const namespace = 'v1';
-axios.defaults.baseURL = 'http://localhost:3000/' + namespace;
+const namespace = "v1";
+axios.defaults.baseURL = "http://localhost:3000/" + namespace;
 
 Object.defineProperties(Vue.prototype, {
   '$http': {
@@ -27,14 +27,23 @@ Object.defineProperties(Vue.prototype, {
     get() {
       return axios;
     }
+  },
+
+  '$discourse': {
+    get() {
+      return {
+        url: "localhost",
+        port: 1337
+      };
+    }
   }
-})
+});
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
+  el: "#app",
   router,
   store,
-  template: '<App/>',
-  components: { App },
-})
+  template: "<App/>",
+  components: { App }
+});

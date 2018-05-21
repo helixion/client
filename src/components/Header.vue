@@ -15,8 +15,8 @@
                     <router-link class="navbar-item" to="/">History</router-link> 
                     <router-link class="navbar-item" to="/">Recruitment</router-link> 
                     <router-link class="navbar-item" to="/">Media</router-link> 
-                    <a href="http://localhost:3000/session/sso" class="navbar-item" v-if="isAuthenticated" target="_blank">Discussion</a>           
-                    <a href="http://localhost:3000" class="navbar-item" v-if="!isAuthenticated" target="_blank">Discussion</a>                                                 
+                    <a :href="`${forumUrl}/session/sso`" class="navbar-item" v-if="isAuthenticated" target="_blank">Discussion</a>           
+                    <a :href="forumUrl" class="navbar-item" v-if="!isAuthenticated" target="_blank">Discussion</a>                                                 
                 </div>
                 <div id="account-panel" class="navbar-end" v-if="!isAuthenticated">
                     <a class="navbar-item" @click.prevent="setModal(true)">
@@ -62,7 +62,11 @@ export default {
           'isAuthenticated',
           'currentUser',
           'showMobileMenu'
-      ])
+      ]),
+
+      forumUrl() {
+          return `http://${this.$discourse.url}:${this.$discourse.port}`;
+      }
   },
 
   created() {
