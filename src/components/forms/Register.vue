@@ -12,7 +12,7 @@
             <vue-recaptcha
             theme="dark"
             ref="recaptcha" 
-            :sitekey="site_key" 
+            :sitekey="siteKey" 
             @expired="onExpire" 
             @verify="onVerify"/>
           </div>
@@ -96,7 +96,7 @@ export default {
           }
         }
       },
-      site_key: "6Ldcm1sUAAAAALDyu1f5Q60-fQbIDLrG5_i6F-ff",
+      // site_key: "6Ldcm1sUAAAAALDyu1f5Q60-fQbIDLrG5_i6F-ff",
       recaptcha: null,
       success: false,
       sending: false
@@ -107,6 +107,10 @@ export default {
     isDisabled() {
       const { inputs } = this;
       return Object.keys(inputs).some(key => !inputs[key].value) || !this.recaptcha
+    },
+
+    siteKey() {
+      return this.$store.getters.siteKey
     },
 
     buttonClasses() {

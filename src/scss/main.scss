@@ -1,9 +1,11 @@
-@import url('https://fonts.googleapis.com/css?family=Lato');
-@import 'variables';
-@import 'header';
-@import 'body';
-@import 'form';
-@import 'notifications';
-@import 'home';
-@import '../../node_modules/bulma/bulma.sass'
-
+@import url("https://fonts.googleapis.com/css?family=Lato");
+@import "variables";
+@import "body";
+@import "form";
+@import "./components/header";
+@import "./components/composer";
+@import "./components/post";
+@import "./components/modals/authentication";
+@import "./views/home";
+@import "./views/post";
+@import "../../node_modules/bulma/bulma.sass";

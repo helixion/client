@@ -14,10 +14,9 @@ html {
   }
 }
 
-
 #main {
   min-height: calc(100vh - 132px);
-  &.page {
+  &.has-fixed-header {
     padding-top: 6rem;
   }
   .mobile {
@@ -25,9 +24,9 @@ html {
     min-height: 100%;
   }
   &.mobile:before {
-    content: '';
+    content: "";
     display: block;
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
     transition: background-color 0.25s ease-in-out;
   }
   &.mobile-open {
@@ -45,6 +44,9 @@ html {
 
 h1,
 h2,
-h3 {
+h3,
+h4,
+h5,
+h6 {
   color: #cacaca !important;
 }

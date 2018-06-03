@@ -33,7 +33,7 @@
       </div>
       <div class="bottom-controls">
         <div class="left-controls">
-          <button class="control-button is-primary" @click.prevent="save">Create Post</button>
+          <button class="control-button is-primary" :disabled="isSaving" @click.prevent="save">Save</button>
           <button class="control-button has-outline" @click.prevent="initCancelPrompt">Cancel</button>
         </div>
       </div>
@@ -44,6 +44,7 @@
 <script>
 import Editor from "./Editor";
 import CancelPrompt from "./modals/CancelPrompt";
+import { mapGetters } from "vuex";
 export default {
   name: "composer",
   components: {
@@ -62,22 +63,27 @@ export default {
       startingHeight: 0,
       height: 460,
       hidden: false,
-      sending: false,
+      isSaving: false,
       isDragging: false,
       draft: null,
       modalType: "",
       title: "",
-      content: "Insert plain text or html here..."
+      content: "Insert your text here....",
+      msgOpts: {
+        theme: "primary",
+        icon: "check",
+        duration: 3000,
+        className: ["bis-notification", "success"]
+      }
     };
   },
   computed: {
-    isAuthenticated() {
-      return this.$store.getters.isAuthenticated;
-    },
+    ...mapGetters(["isAuthenticated", "editableContent", "verb"]),
 
     rootClasses() {
       return { draft: this.hidden };
     },
+
     rootStyles() {
       return {
         height: this.height + "px",
@@ -87,8 +93,20 @@ export default {
           "ms ease, background 250ms ease, max-width 250ms ease"
       };
     },
+
     contentClasses() {
       return ["editor-area", { hidden: this.hidden }];
+    }
+  },
+
+  watch: {
+    editableContent(content) {
+      if (content) {
+        this.title = content.title;
+        this.$store.dispatch("toggleEditor", true);
+      } else {
+        this.title = "";
+      }
     }
   },
 
@@ -155,48 +173,53 @@ export default {
           this.hidden = false;
           this.showPreview = true;
           this.content = "Insert plain text or html here...";
+          this.$store.dispatch("setEditableContent", null);
         });
       }, 250);
     },
 
     async save() {
       if (!this.isAuthenticated) {
-        this.$toasted.show("Not authorized to make a post.", {
-          theme: "primary",
-          duration: 3000,
-          icon: "exclamation-triangle",
-          className: ["bis-notification", "danger"]
-        });
+        const message = "Not authorized to make a post.";
+        this.msgOpts.icon = "exclamation-triangle";
+        this.msgOpts.className[1] = "danger";
+        this.$toasted.show(message, this.msgOpts);
         return;
       }
 
-      const data = {
-        author_id: this.$store.getters.currentUser.id,
-        title: this.title,
-        body: this.content
-      };
+      let data, url, response;
 
-      let response;
+      if (this.verb === "post") {
+        data = {
+          author_id: this.$store.getters.currentUser.id,
+          title: this.title,
+          body: this.content
+        };
+        url = "/posts";
+      } else {
+        data = {
+          title: this.title,
+          body: this.content
+        };
+        url = `/posts/${this.editableContent.id}`;
+      }
 
       try {
-        response = await this.$http.post("/posts", { post: data });
-        this.$toasted.show("Saved.", {
-            theme: "primary",
-            icon: "check",
-            duration: 3000,
-            className: ["bis-notification", "success"]
-          });
-          console.log(response.data);
+        response = await this.$http[this.verb](url, { post: data });
+        this.msgOpts.icon = "check";
+        this.msgOpts.className[1] = "success";
+        this.$toasted.show("Saved.", this.msgOpts);
+        this.$router.push(
+          `/p/${response.data.post.id}/${response.data.post.slug}`
+        );
       } catch (e) {
         if (e.response) {
-          this.$toasted.show(`${e.response.status}: ${e.response.data.message}`, {
-            theme: "primary",
-            icon: "exclamation-triangle",
-            duration: 3000,
-            className: ["bis-notification", "danger"]
-          });
+          const message = `${e.response.status}:${e.response.data.message}`;
+          this.msgOpts.icon = "exclamation-triangle";
+          this.msgOpts.className[1] = "danger";
+          this.$toasted.show(message, this.msgOpts);
         } else if (e.request) {
-          console.log(e.message)
+          console.log(e.message);
         } else {
           console.log(e.message);
         }
@@ -209,198 +232,5 @@ export default {
 
 
 <style lang="scss" scoped>
-#editor-container {
-  display: flex;
-  background-color: #0f0f0f; //#181a1e;
-  flex-direction: column;
-  max-width: 1475px;
-  min-height: 230px;
-  width: 100%;
-  margin-right: auto;
-  margin-left: auto;
-  z-index: 100;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  position: fixed;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
-
-  #resizer {
-    padding: 4px 0;
-    cursor: row-resize;
-    background-color: #0a0a0a; //#0a0b0c;
-    &:before {
-      content: "";
-      display: block;
-      width: 27px;
-      margin: auto;
-      border-top: 3px double #fff;
-    }
-  }
-
-  &.hide-preview {
-    max-width: calc(1475px / 2) !important;
-    .preview-wrapper {
-      display: none !important;
-    }
-  }
-
-  .top-controls,
-  .bottom-controls,
-  .editor-area {
-    padding-right: 0.75rem;
-    padding-left: 0.75rem;
-  }
-
-  .top-controls,
-  .bottom-controls {
-    display: flex;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-    align-items: center;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-
-    .left-controls {
-      align-items: center;
-    }
-
-    .right-controls {
-      flex-direction: row-reverse;
-      .show-hide {
-        text-decoration: none;
-        color: darkgrey;
-        cursor: pointer;
-      }
-    }
-
-    .left-controls,
-    .right-controls {
-      flex-basis: 50%;
-      display: flex;
-    }
-
-    .control-button {
-      border: 0;
-      padding: 0.55rem;
-      margin: 0 5px;
-      &:last-child {
-        margin: 0;
-      }
-      &:focus {
-        border: none;
-        outline: none;
-      }
-      &.is-primary {
-        background-color: lightgrey;
-      }
-      &.has-outline {
-        padding: 0.49rem;
-        background-color: transparent;
-        border: 1px solid lightgrey;
-        color: #cacaca;
-      }
-    }
-  }
-
-  .top-controls {
-    .minimize {
-      color: #cacaca;
-    }
-    .right-controls {
-      flex: 1;
-    }
-  }
-
-  button {
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-    &:focus {
-      border: none;
-      outline: none;
-    }
-  }
-  .editor-modals {
-    position: relative;
-    .modal-background {
-      position: fixed;
-    }
-  }
-  .editor-area {
-    margin: 0 auto;
-    padding: 5px 15px;
-    height: calc(100% - 11px);
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    &.hidden {
-      display: none;
-    }
-    .editor-wrappers {
-      display: flex;
-      flex-grow: 1;
-      max-width: 100%;
-      .editor-wrapper {
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        flex: 1;
-      }
-      .preview-wrapper {
-        overflow: auto;
-        cursor: default;
-        max-width: 49%;
-        margin-left: 1%;
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-      }
-    }
-  }
-}
-
-.draft {
-  height: 50px !important;
-  min-height: 50px !important;
-  background-color: #0b0b0b;
-  cursor: pointer;
-  .draft-controls {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    color: #cacaca;
-    .draft-text {
-      text-align: left;
-      flex: 1;
-    }
-    .restore {
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  .top-controls,
-  .bottom-controls {
-    display: none !important;
-  }
-}
-
-.editor-input-wrapper {
-  margin-bottom: 0.75rem;
-}
-.editor-input {
-  background-color: #1f1f1f; //#1f2226;
-  color: #cacaca;
-  padding: 0.5rem 0.25rem;
-  border: none;
-  flex: 1;
-  width: 100%;
-  &:focus {
-    border: none;
-    outline: none;
-  }
-}
-
 @import "../../scss/animations/slide-from-bottom";
 </style>

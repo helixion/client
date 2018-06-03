@@ -149,28 +149,25 @@ export default {
 
       try {
         const response = await this.$http.put("/users/update/avatar", formData);
-        console.log(response.data);
         this.$store.dispatch("setAvatar", response.data.user.avatar);
         const message = "Changes saved.";
-        const options = { ...this.toastOptions };
-        options.icon = "check";
-        options.className[1] = "success";
-        this.$toasted.show(message, options);
-        this.reset();
+        this.toastOptions.icon = "check";
+        this.toastOptions.className[1] = "success";
+        this.$toasted.show(message, this.toastOptions);
       } catch (e) {
+        this.toastOptions.icon = "exclamation-triangle";
+        this.toastOptions.className[1] = "warning";
         if (e.response) {
           const message = e.response.data.message;
           this.$toasted.show(message, this.toastOptions);
         } else if (e.request) {
           const message = e.request.message;
-          const errOpts = { ...this.toastOptions };
-          errOpts.className[1] = "warning";
-          this.$toasted.show(message, errOpts);
+          this.$toasted.show(message, this.toastOptions);
         } else {
           console.log(e);
         }
-        this.reset();
       }
+      this.reset();
     }
   }
 };
@@ -203,7 +200,7 @@ export default {
 
     .upload-button {
       border: 0;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.5);
       padding: 5px;
       min-width: 40px;
       color: #fff;

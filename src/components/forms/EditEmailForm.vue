@@ -5,7 +5,7 @@
       <h4 class="title is-4">Edit Email</h4>
     </div>
     <div class="section-body">
-      <form action="">
+      <form class="bis" action="">
         <fieldset :class="{ 'is-disabled': sending }" :disabled="sending">
           <form-input v-for="(input, key) in credentials" :key="key" 
           v-model="input.value" 
@@ -14,6 +14,16 @@
           :id="input.id" 
           :validators="input.validators">
           </form-input>
+          <div class="field">
+            <div class="control">
+              <vue-recaptcha
+                theme="dark"
+                ref="recaptcha" 
+                :sitekey="site_key" 
+                @expired="onExpire" 
+                @verify="onVerify"/>
+            </div>
+          </div>
           <div class="field is-horizontal">
             <div class="field-body">
               <div class="field is-grouped is-grouped-centered">
@@ -36,10 +46,12 @@
 
 <script>
 "use strict";
-import FormInput from "./inputs/HorizontalFormInput";
+import recaptcha from "@/mixins/recaptcha";
+import FormInput from "./inputs/Input";
 export default {
   name: "edit-email-form",
   components: { FormInput },
+  mixins: [recaptcha],
   $_veeValidate: {
     validator: "new"
   },
@@ -53,8 +65,8 @@ export default {
     return {
       credentials: {
         password: {
-          value: "",
-          label: "password",
+          value: null,
+          label: "PASSWORD *",
           id: "edit-email-password",
           type: "password",
           validators: {
@@ -65,8 +77,8 @@ export default {
           }
         },
         email: {
-          value: "",
-          label: "email",
+          value: null,
+          label: "NEW EMAIL ADDRESS *",
           id: "edit-email",
           type: "text",
           validators: {
@@ -74,20 +86,24 @@ export default {
             email: true
           }
         }
-      }
+      },
+      recaptcha: null
     };
   },
   computed: {
     isDisabled() {
-     return Object.keys(this.credentials).some(key => !this.credentials[key]);
+      return Object.keys(this.credentials).some(key => !this.credentials[key]) || !this.recaptcha;
+    },
+    site_key() {
+      return this.$store.getters.siteKey;
     }
   },
   methods: {
+   
     clearForm() {
-      const credentials = this.credentials;
-      for (let key in credentials) {
-        credentials[key].value = "";
-      }
+      Object.keys(this.credentials).forEach(key => {
+        this.credentials[key] = "";
+      })
     },
 
     async changeEmail() {

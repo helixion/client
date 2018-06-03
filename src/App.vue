@@ -27,6 +27,7 @@ export default {
     appModal: Modal,
     MobileMenu
   },
+  
   computed: {
     isAuthenticated() {
       return this.$store.getters.isAuthenticated;
@@ -35,7 +36,7 @@ export default {
       return this.$store.getters.showMobileMenu;
     },
     mainClasses() {
-      return ["page", { "mobile mobile-open": this.showMobileMenu }];
+      return ["has-fixed-header", { "mobile mobile-open": this.showMobileMenu }];
     }
   },
   methods: {

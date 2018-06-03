@@ -14,6 +14,16 @@
             :id="input.id" 
             :validators="input.validators">
             </form-input>
+            <div class="field">
+              <div class="control">
+                <vue-recaptcha
+                  theme="dark"
+                  ref="recaptcha" 
+                  :sitekey="site_key" 
+                  @expired="onExpire" 
+                  @verify="onVerify"/>
+              </div>
+            </div>
             <div class="field is-horizontal">
               <div class="field-body">
                 <div class="field is-grouped is-grouped-centered">
@@ -36,9 +46,11 @@
 <script>
 "use strict";
 import FormInput from "./inputs/HorizontalFormInput";
+import recaptcha from "@/mixins/recaptcha";
 export default {
   name: "edit-password-form",
   components: { FormInput },
+  mixins: [recaptcha],
   $_veeValidate: {
     validator: "new"
   },
@@ -82,7 +94,7 @@ export default {
 
   computed: {
     isDisabled() {
-      return Object.keys(this.credentials).some(key => !this.credentials[key]);
+      return Object.keys(this.credentials).some(key => !this.credentials[key]) || this.recaptcha;
     }
   },
 

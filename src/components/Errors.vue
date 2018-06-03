@@ -22,52 +22,59 @@
 
 
 <script>
-'use strict';
 const error = {
-    "500": {
-        code: 500,
-        class: 'fa-exclamation-triangle',
-        type: "Internal Server Error",
-        message: "We encountered an error and the service is trying to recover."
-    },
-    "401": {
-        code: 401,
-        class: 'fa-ban',
-        type: "Unauthorized",
-        message: "You are not authorized to view this content."
-    },
-    "404": {
-        code: 404,
-        class: 'fa-question-circle',
-        type: "Not Found",
-        message: "The content you're looking for doesn't exist."
-    },
-    "403": {
-        code: 403,
-        class: 'fa-ban',
-        type: "Forbidden",
-        message: "You have no access privilages."
-    },
-}
-    
+  "500": {
+    code: 500,
+    class: "fa-exclamation-triangle",
+    type: "Internal Server Error",
+    message: "We encountered an error and the service is trying to recover."
+  },
+  "422": {
+    code: 422,
+    class: "fa-question-circle",
+    type: "Bad Request",
+    message: "Request was malformed."
+  },
+  "404": {
+    code: 404,
+    class: "fa-question-circle",
+    type: "Not Found",
+    message: "The content you're looking for doesn't exist."
+  },
+  "403": {
+    code: 403,
+    class: "fa-ban",
+    type: "Forbidden",
+    message: "You have no access privilages."
+  },
+  "401": {
+    code: 401,
+    class: "fa-ban",
+    type: "Unauthorized",
+    message: "You are not authorized to view this content."
+  }
+};
+
 export default {
+  name: "error-handler",
   beforeRouteEnter(to, from, next) {
     const incomingErrorCode = to.params.status;
-    const validError = Object.keys(error)
-        .find(err => err === incomingErrorCode);
+    const validError = Object.keys(error).find(
+      err => err === incomingErrorCode
+    );
     if (!validError) {
-        next('/');
+      next("/");
     } else {
-        next();
-    }  
+      next();
+    }
   },
 
-  props: ['status'],
+  props: ["status"],
 
   data() {
     return {
-      error,
-    }
+      error
+    };
   },
 
   computed: {
@@ -89,8 +96,8 @@ export default {
   background-color: #111;
   min-width: 100%;
   min-height: 30rem;
-  box-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-  h1, 
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  h1,
   h2 {
     margin: 0;
     padding: 0;

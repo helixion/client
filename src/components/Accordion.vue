@@ -59,7 +59,6 @@ export default {
       timeout: null
     };
   },
-  
 
   beforeDestroy() {
     this.timeout = null;
@@ -70,11 +69,16 @@ export default {
       this.transition = "";
       this.height = `${this.$refs.accordion.scrollHeight}px`;
       this.show = true;
+      this.$nextTick(() => {
+        this.height = "";
+      });
     }
   },
 
   methods: {
-    toggleTransition() {
+    toggleTransition(evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
       this.transition = "height 250ms ease";
       this.height = `${this.$refs.accordion.scrollHeight}px`;
       if (!this.show) {
@@ -107,9 +111,6 @@ export default {
         },
         attrs: {
           id: this.id
-        },
-        on: {
-          click: this.toggleTransition
         }
       },
       //child of this.parentTag
@@ -134,6 +135,9 @@ export default {
               },
               attrs: {
                 role: "button"
+              },
+              on: {
+                click: this.toggleTransition
               }
             })
           ]

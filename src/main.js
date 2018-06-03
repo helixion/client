@@ -19,6 +19,7 @@ const namespace = "v1";
 axios.defaults.baseURL = "http://localhost:3000/" + namespace;
 axios.defaults.timeout = 3000;
 
+
 Object.defineProperties(Vue.prototype, {
   '$http': {
     get() {

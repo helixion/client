@@ -3,18 +3,32 @@
     :showInitially="true" 
     parentTag="article" 
     headerTag="div" 
-    :containerClasses="{ accordion: true, article: true }" 
+    :containerClasses="{ accordion: true, post: true }" 
     :headerClasses="{ 'toggle-padding': true }">
-    <div class="article-header" slot="header">
+    <div class="post-header" slot="header">
       <div class="avatar">
          <img :src="`http://localhost${post.author.avatar}`">
       </div>
       <span>
-        <h6 class="title is-4">{{post.title}}</h6>
+        <h6 class="title is-4">
+          <router-link :to="`/p/${post.id}/${post.slug}`">{{post.title}}</router-link>
+        </h6>
         <small>Posted by {{post.author.username}} on {{formattedDate}}</small>
       </span>
     </div>
-    <div class="article-body" v-html="post.body"> 
+    <div class="post-body" v-html="post.body"> 
+    </div>
+    <div class="post-foot">
+      <div class="post-foot-right">
+        <span class="post-options" role="button" @click.prevent="editPost">
+          <i class="fa fa-edit"></i>
+          Edit
+        </span>
+        <span class="post-options" role="button" @click.prevent="deletePost()">
+          <i class="fa fa-times"></i>
+          Delete
+        </span>
+      </div>
     </div>
   </accordion>  
 </template>
@@ -45,61 +59,23 @@ export default {
     formattedDate() {
       return format(this.post.created_at, "dddd, MMMM DD, YYYY");
     }
+  },
+
+  methods: {
+    editPost() {
+      this.$store.dispatch("setVerb", "put");
+      this.$store.dispatch('setEditableContent', this.post);
+    },
+    deletePost() {
+      this.$store.dispatch("deletePost", this.post.id);
+      setTimeout(() => {
+        this.$store.dispatch("fetch");
+      }, 100);
+    }
   }
 };
 </script>
 
 <style lang="scss">
-.article {
-  position: relative;
-  width: 100%;
-  top: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.7);
-  background-color: #0f0f0f;
-  .toggle-padding {
-    padding-right: 0.75rem;
-  }
-  .article-header {
-    background-color: #0f0f0f; //#181a1e;
-    flex: 1;
-    display: flex;
-    padding: 0.35rem 0.63rem;
-    align-items: center;
-    text-align: left;
-    z-index: 3;
-
-    h6,
-    small {
-      color: #cacaca;
-    }
-    h6 {
-      margin-top: 0;
-      margin-bottom: 0;
-      text-align: left;
-    }
-
-    .avatar {
-      width: 60px;
-      height: 50px;
-      img {
-        width: 50px;
-        height: inherit;
-        border-radius: 50%;
-      }
-    }
-  }
-  .article-body {
-    flex: 1;
-    background-color: #1f1f1f; //#383b40
-    color: #cacaca;
-    padding: 0.75rem;
-    text-align: left;
-    height: auto;
-  }
-}
-
 @import "../scss/animations/slide-from-top";
 </style>

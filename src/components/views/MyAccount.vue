@@ -84,27 +84,26 @@ export default {
   },
 
   methods: {
-    saveChanges(url, data) {
-      this.$http
-        .put(url, data)
-        .then(res => {
-          this.notificationOpts.icon = "check";
-          this.notificationsOpts.className[1] = "success";
-          const message = res.data.mesage;
-          this.$toasted.show(message, notificationOpts);
-        })
-        .catch(e => {
-          this.notificationOpts.icon = "exclamation-triangle";
-          this.notificationsOpts.className[1] = "danger";
-          if (e.response) {
-            const message = `[${e.response.status}]:${e.response.data.message}`;
-            this.$toasted.show(message, opts);
-          } else if (e.request) {
-            console.log(e.request);
-          } else {
-            console.log(e.message);
-          }
-        });
+    async saveChanges(url, data) {
+      let response;
+      try {
+        response = await this.$http.put(url, data);
+        this.notificationOpts.icon = "check";
+        this.notificationsOpts.className[1] = "success";
+        const message = response.data.mesage;
+        this.$toasted.show(message, notificationOpts);
+      } catch (e) {
+        this.notificationOpts.icon = "exclamation-triangle";
+        this.notificationsOpts.className[1] = "danger";
+        if (e.response) {
+          const message = `[${e.response.status}]:${e.response.data.message}`;
+          this.$toasted.show(message, opts);
+        } else if (e.request) {
+          console.log(e.request);
+        } else {
+          console.log(e.message);
+        }
+      }
     }
   }
 };

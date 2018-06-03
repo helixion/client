@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="posts">
+  <div class="container">
     <app-carousel :slides="slides"></app-carousel>
     <section id="recent-news">
       <div class="section-header">
@@ -8,8 +8,8 @@
       <div class="columns is-multiline">
         <div class="column is-12">
           <div class="columns">
-            <div class="column">
-              <pagination :total="meta.total" :current.sync="currentPage" :size="'is-small'"></pagination>
+            <div class="column" v-if="total">
+              <pagination :total="total" :current.sync="current" :size="'is-small'"></pagination>
             </div>
             <div class="right-options column">
               <button class="button is-small is-primary" @click.prevent="toggleEditor(true)">
@@ -21,7 +21,7 @@
         </div>
         <template v-if="posts.length">
           <div class="column is-12" v-for="(post, index) in posts" :key="index">
-            <app-post :post="post" />
+            <app-post :post="post"/>
         </div>
         </template>
         <template v-else>
@@ -43,7 +43,7 @@ import Pagination from "@/components/Pagination";
 import Post from "@/components/NewsPost";
 import Carousel from "@/components/carousel/Carousel";
 import TextEditor from "@/components/editor/ComposerNoPreview";
-import { mapActions } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   name: "home",
@@ -53,24 +53,27 @@ export default {
     Pagination,
     TextEditor
   },
+  
+  props: ["page"],
 
   beforeRouteEnter(to, from, next) {
     const { require_login } = to.query;
     const token = localStorage.getItem("bis_access_token");
+    const page = typeof to.params.page === undefined ? 1 : to.params.page;
+
     if (require_login && !token) {
       next(vm => {
         vm.$store.dispatch("setModal", true);
       });
     } else {
       next(vm => {
-        vm.fetchRecords(1);
+        vm.$store.dispatch("fetch");
       });
     }
   },
 
   data() {
     return {
-      currentPage: 1,
       perPage: 20,
       slides: [
         {
@@ -87,50 +90,50 @@ export default {
             "https://images.pexels.com/photos/48178/mountains-ice-bergs-antarctica-berg-48178.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
           title: "Mountains N Shit"
         }
-      ],
-      posts: [],
-      meta: {}
+      ]
     };
   },
   computed: {
-    showEditor() {
-      return this.$store.getters.showEditor;
-    }
+    ...mapGetters(["showEditor", "posts", "total", "totalPages", "current"])
   },
 
   methods: {
-    ...mapActions(["toggleEditor"]),
-    async fetchRecords(page) {
-      this.currentPage = page;
-      let response;
-      try {
-        response = await this.$http.get("/posts", {
-          params: {
-            page
-          }
-        });
-      } catch (e) {
-        console.log(e);
-        return;
-      }
+    created() {
+      this.initalFetch();
+    },
 
-      this.posts = response.data.posts.results;
-      this.meta.total = response.data.posts.total;
-
-      console.log(response.data);
+    toggleEditor(bool) {
+      this.$store.dispatch("setVerb", "post");
+      this.$store.dispatch("toggleEditor", true);
     }
+
+    // async initalFetch(page) {
+    //   let response;
+    //   try {
+    //     response = await this.$http.get("/posts", { params: { page } });
+    //     this.$store.dispatch("setPosts", response.data.posts.results);
+    //     this.$store.dispatch("setMeta", respose.data.posts.total);
+    //   } catch (e) {
+    //     if (e.response) {
+    //       this.$router.push(`/error/${e.response.status}`);
+    //     }
+    //   }
+    // }
   },
 
   watch: {
     //if the incoming page request is greater than total pages, we redirect it to keep it within parameters
     page(page) {
+      console.log(page);
       if (page > this.meta.totalPages) {
         this.$router.redirect(`/page/${this.meta.totalPages}`);
+        this.$store.dispatch("setCurrentPage", this.meta.totalPages);
       } else if (page < 1) {
         this.$router.redirect("/");
+        this.$store.dispatch("setCurrentPage", 1);
       } else {
         if (!page) {
-          this.currentPage = 1;
+          this.$store.dispatch("setCurrentPage", 1);
         }
       }
     }

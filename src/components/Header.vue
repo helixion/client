@@ -28,22 +28,26 @@
                     <div class="dropdown is-right is-hoverable" v-if="currentUser">
                         <div class="dropdown-trigger">
                             <div aria-haspopup="true" aria-controls="dropdown-menu">
-                                <span>My Account</span>
-                                <span class="icon is-small">
-                                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                </span>
+                                <div class="profile">
+                                    <img :src="`http://localhost${currentUser.avatar}`" alt="" class="avatar-sm">    
+                                    <span>{{currentUser.username}}</span>
+                                    <span class="icon is-small">
+                                        <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                                
                             </div>
                         </div>
                         <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                            <div class="dropdown-header">
-                                <span class="icon is-medium">
-                                    <img class="avatar" :src="currentUser.avatar" alt="">
-                                </span>
-                                <span class="username">{{currentUser.username}}</span>
-                            </div>
                             <div class="dropdown-content">
-                                <router-link to="/myaccount" class="dropdown-item">Profile</router-link>
-                                <a class="dropdown-item" @click.prevent="invalidate">Logout</a>
+                                <router-link to="/myaccount" class="dropdown-item">
+                                    <i class="fa fa-gear"></i>
+                                    Settings
+                                </router-link>
+                                <a class="dropdown-item" @click.prevent="invalidate">
+                                    <i class="fa fa-sign-out"></i>
+                                    Logout
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -57,6 +61,7 @@
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
+  name: "header",
   computed: {
       ...mapGetters([
           'isAuthenticated',
@@ -71,11 +76,10 @@ export default {
 
   created() {
       const token = window.localStorage.getItem('bis_access_token');
-      if (token) {
-          this.setCurrentUser();                              
+      if (token) {                         
           this.setAuthentication(true);
       } else {
-          this.setAuthentication(false);
+          this.invalidate();
       }
   },
 
@@ -94,11 +98,19 @@ export default {
 </script>
 
 <style lang="scss">
-.avatar {
-    width: 60px;
-    height: 60px;
-    flex-basis: 60px;
-    border-radius: 20px;
+.avatar-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span {
+        padding: 0 0.5rem;
+    }
 }
 
 .dropdown-header {

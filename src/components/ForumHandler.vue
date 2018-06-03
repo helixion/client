@@ -1,5 +1,5 @@
 <template>
-  <div class="f-signin" v-if="user">
+  <div class="f-signin">
       <div class="content">
           <h1>Signing Into Discourse</h1>
           <div class="spinner">
@@ -54,18 +54,17 @@ export default {
         vm.$router.push({ path: "/", query: { require_login: true } });
       } else {
         const { sso, sig } = to.query;
-        console.log(to.query);
-        console.log(vm.currentUser);
-        vm.loginIntoDiscourse(sso, sig);
+        vm.$nextTick(() => {
+          setTimeout(() => {
+            vm.loginIntoDiscourse(sso, sig);
+          }, 100);
+        });
       }
     });
   },
 
   computed: {
     ...mapGetters(["isAuthenticated", "currentUser"])
-    // isAuthenticated() {
-    //   return this.$store.getters.isAuthenticated;
-    // },
   },
 
   methods: {

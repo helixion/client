@@ -12,7 +12,7 @@ import Verify from "@/components/views/Verify";
 import ResetPassword from "@/components/views/ResetPassword";
 import Errors from "@/components/Errors";
 import ForumHandler from "@/components/ForumHandler";
-import ManagePost from "@/components/views/ManagePost";
+import ViewPost from "@/components/views/ViewPost";
 
 const bar = (Vue.prototype.$bar = new Vue(ProgressBar).$mount());
 document.body.appendChild(bar.$el);
@@ -39,12 +39,9 @@ const router = new Router({
       }
     },
     {
-      path: "/manage-post/create",
-      name: "manage-post",
-      component: ManagePost,
-      meta: {
-        title: "Manage Post - Create"
-      }
+      path: "/p/:id/:slug",
+      name: "Post",
+      component: ViewPost
     },
     {
       path: "/verify/:code",

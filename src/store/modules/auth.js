@@ -41,7 +41,7 @@ export const actions = {
       localStorage.setItem("bis_access_token", token);
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       dispatch("setModal", false);
-      dispatch("setCurrentUser");                  
+      dispatch("setCurrentUser");
       dispatch("setAuthentication", true);
     }
     console.log(response);
@@ -59,11 +59,12 @@ export const actions = {
     commit("SET_CURRENT_USER", null);
   },
 
-  setAuthentication({ commit }, bool) {
+  setAuthentication({ commit, dispatch }, bool) {
+    dispatch("setCurrentUser");
     commit("SET_AUTHENTICATION", bool);
   },
 
-  setAvatar({commit}, payload) {
+  setAvatar({ commit }, payload) {
     commit("SET_AVATAR", payload);
   },
 

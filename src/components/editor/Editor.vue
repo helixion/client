@@ -43,9 +43,19 @@ export default {
   },
   data() {
     return {
-      editor: null
+      editor: null,
+      _content: "",
+      placeholder: "Insert text here...."
     };
   },
+
+  computed: {
+    editableContent() {
+      const copy = {...this.$store.getters.editableContent};
+      return copy.body;
+    }
+  },
+
   mounted() {
     if (this.$el) {
       const element = document.getElementById(this.id);
@@ -79,7 +89,21 @@ export default {
       }
     }
   },
-  
+
+  watch: {
+    editableContent(val) {
+      if (this.editor) {
+        if (!!val && val !== this._content) {
+          this._content = val;
+          this.editor.content.innerHTML = this._content;
+        } else {
+          this._content = this.placeholder;
+          this.editor.content.innerHTML = this._content;
+        }
+      }
+    }
+  },
+
   beforeDestroy() {
     this.editor = null;
   }

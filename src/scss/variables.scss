@@ -1,5 +1,5 @@
-//body
-$primary-background-color: #151618;//#272727; //#23262b
+/* BODY */
+$primary-background-color: #131313;//#151618;//#272727; //#23262b
 $primary-font-color: #cacaca;
 $text: #cacaca;
 $text-strong: $text;
@@ -7,22 +7,47 @@ $secondary-font-color: #91949e;
 $family-primary: 'Lato', sans-serif;
 $primary: #3c3c3c;//#181a1e;
 
+$highlight-color: #3f88c5;
+
 $background: #23262b;
-$link-hover-color: #50a4c3;
-$link-visted-color: #50a4c3;
-//header
+$link-hover-color: $highlight-color;
+$link-visted-color: $highlight-color;
+
+/* HEADER */
 $primary-header-font-family: 'Lato', sans-serif;
 $header-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.5);
-//dropdown
-$dropdown-content-background-color: #333;
+
+/* DROPDOWN MENU */
+$dropdown-content-background-color: #1f1f1f;
 $dropdown-item-color: $primary-font-color;
-$dropdown-item-hover-background-color: #1d1d1d;
+$dropdown-item-hover-background-color: #0b0b0b;
 $dropdown-item-hover-color: $primary-font-color;
-//panel
+
+/* PANEL */
 $panel-list-item-color: #cacaca;
 $panel-icon-color: #cacaca;
-//form
+
+/* FORM */
 $input-focus-color: $link-hover-color;
-//button
+
+/* BUTTON */
 $button-background-color: #5f6266;
 
+/* VIEW POST */
+$post-primary-background-color: #1f1f1f;
+$post-side-background-color: #222;
+
+/* DEFAULT MODAL */
+$modal-card-head-background-color: #272727;
+$modal-card-title-color: $primary-font-color;
+$modal-card-body-background-color: $primary-background-color;
+$modal-card-head-border-bottom: none;
+$modal-card-foot-border-top: none;
+
+/* AUTHENTICATION MODAL */
+$bis-overlay-background: rgba(22,22,22,0.9);
+$bis-modal-body-background: #272727;
+$bis-modal-tab-active: #272727;
+$bis-modal-footer-background: #222;
+$bis-primary-font-color: #cacaca;
+$bis-model-head-background-color: #1f1f1f;

@@ -63,7 +63,7 @@ export default {
 
 
 <style lang="scss">
-.bis-modal {
+.bis {
   .error {
     font-size: 12px;
     position: absolute;
