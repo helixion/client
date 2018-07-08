@@ -44,8 +44,18 @@
   }
 
   .post-view-body {
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem 1rem;
     background-color: #151515;
-    padding: 1rem;
+    .tools {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+
+  .post-view-content {
+    background-color: #151515;
     height: 100%;
     flex: 1;
     color: #cacaca;

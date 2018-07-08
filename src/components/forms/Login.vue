@@ -3,12 +3,14 @@
     <fieldset :class="{ 'is-disabled': sending }" :disabled="sending">
       <app-input 
         :label="inputs.email.label" 
-        :id="inputs.email.id" 
+        :id="inputs.email.id"
+        :type="inputs.email.type" 
         :validators="inputs.email.validators" 
         v-model="inputs.email.value"/>
       <app-input
         :label="inputs.password.label"
         :id="inputs.password.id"
+        :type="inputs.password.type"
         :validators="inputs.password.validators"
         v-model="inputs.password.value">
           <a class="forgotpwd" @click.prevent="$emit('setForm', 'app-password-recovery')">Forgot Password?</a>

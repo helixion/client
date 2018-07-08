@@ -57,6 +57,10 @@ export const actions = {
     commit("SET_POSTS", payload);
   },
 
+  setCurrentPage({ commit }, num) {
+    commit("SET_CURRENT_PAGE", num);
+  },
+
   setMeta({ commit }, payload) {
     commit("SET_META", payload);
   },
@@ -78,7 +82,8 @@ export const actions = {
     }
   },
 
-  async fetch({ state, commit }) {
+  async fetch({ state, commit }, num) {
+    commit("SET_CURRENT_PAGE", num);
     let params = {
       page: state.current,
       limit: state.limit,

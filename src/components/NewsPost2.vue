@@ -11,7 +11,7 @@
       </div>
       <span>
         <h6 class="title is-4">
-          <router-link :to="`/news/${post.id}/${post.slug}`">{{post.title}}</router-link>
+          <router-link :to="`/p/${post.id}/${post.slug}`">{{post.title}}</router-link>
         </h6>
         <small>Posted by {{post.author.username}} on {{formattedDate}}</small>
       </span>
@@ -21,19 +21,27 @@
       </div>
     </div>
     <div class="post-foot">
-      <post-tools :isDropUp="true"/>      
+      <div class="post-foot-right">
+        <span class="post-options" role="button" @click.prevent="editPost">
+          <i class="fa fa-edit"></i>
+          Edit
+        </span>
+        <span class="post-options" role="button" @click.prevent="deletePost()">
+          <i class="fa fa-times"></i>
+          Delete
+        </span>
+      </div>
     </div>
   </accordion>  
 </template>
 
 <script>
 import format from "date-fns/format";
-import PostTools from "@/components/PostTools"
 import Accordion from "@/components/Accordion";
 
 export default {
   name: "news",
-  components: { Accordion, PostTools },
+  components: { Accordion },
   props: {
     post: {
       type: Object,

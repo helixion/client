@@ -2,10 +2,12 @@
 @import "variables";
 @import "body";
 @import "form";
+@import "extra";
 @import "./components/header";
 @import "./components/composer";
 @import "./components/post";
 @import "./components/modals/authentication";
 @import "./views/home";
 @import "./views/post";
+@import "./views/settings";
 @import "../../node_modules/bulma/bulma.sass";

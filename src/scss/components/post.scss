@@ -45,7 +45,16 @@
       color: #cacaca;
       padding: 0.75rem;
       text-align: left;
+      display: flex;
       height: auto;
+      flex-direction: column;
+      .post-tools {
+        display: flex;
+        justify-content: flex-end;
+      }      
+      .post-content {
+        height: auto;
+      }
     }
     .post-foot {
       flex: 1;

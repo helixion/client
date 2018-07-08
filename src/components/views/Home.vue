@@ -9,7 +9,7 @@
         <div class="column is-12">
           <div class="columns">
             <div class="column" v-if="total">
-              <pagination :total="total" :current.sync="current" :size="'is-small'"></pagination>
+              <pagination :total="total" :current="current" :size="'is-small'" @change="fetch"></pagination>
             </div>
             <div class="right-options column">
               <button class="button is-small is-primary" @click.prevent="toggleEditor(true)">
@@ -43,7 +43,7 @@ import Pagination from "@/components/Pagination";
 import Post from "@/components/NewsPost";
 import Carousel from "@/components/carousel/Carousel";
 import TextEditor from "@/components/editor/ComposerNoPreview";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "home",
@@ -53,7 +53,7 @@ export default {
     Pagination,
     TextEditor
   },
-  
+
   props: ["page"],
 
   beforeRouteEnter(to, from, next) {
@@ -61,15 +61,12 @@ export default {
     const token = localStorage.getItem("bis_access_token");
     const page = typeof to.params.page === undefined ? 1 : to.params.page;
 
-    if (require_login && !token) {
-      next(vm => {
+    next(vm => {
+      if (require_login && !token) {
         vm.$store.dispatch("setModal", true);
-      });
-    } else {
-      next(vm => {
-        vm.$store.dispatch("fetch");
-      });
-    }
+      }
+      vm.$store.dispatch("fetch", page);
+    });
   },
 
   data() {
@@ -98,42 +95,26 @@ export default {
   },
 
   methods: {
-    created() {
-      this.initalFetch();
-    },
-
+    ...mapActions(["fetch"]),
     toggleEditor(bool) {
       this.$store.dispatch("setVerb", "post");
       this.$store.dispatch("toggleEditor", true);
     }
-
-    // async initalFetch(page) {
-    //   let response;
-    //   try {
-    //     response = await this.$http.get("/posts", { params: { page } });
-    //     this.$store.dispatch("setPosts", response.data.posts.results);
-    //     this.$store.dispatch("setMeta", respose.data.posts.total);
-    //   } catch (e) {
-    //     if (e.response) {
-    //       this.$router.push(`/error/${e.response.status}`);
-    //     }
-    //   }
-    // }
   },
 
   watch: {
     //if the incoming page request is greater than total pages, we redirect it to keep it within parameters
     page(page) {
       console.log(page);
-      if (page > this.meta.totalPages) {
+      if (page > this.totalPages) {
         this.$router.redirect(`/page/${this.meta.totalPages}`);
-        this.$store.dispatch("setCurrentPage", this.meta.totalPages);
+        this.$store.dispatch("fetch", this.totalPages);
       } else if (page < 1) {
         this.$router.redirect("/");
-        this.$store.dispatch("setCurrentPage", 1);
+        this.$store.dispatch("fetch", 1);
       } else {
         if (!page) {
-          this.$store.dispatch("setCurrentPage", 1);
+          this.$store.dispatch("fetch", 1);
         }
       }
     }

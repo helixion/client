@@ -19,8 +19,11 @@
                         </div>
                         
                     </div>
-                    <div class="column">
-                        <div class="post-view-body" v-html="post.body"></div>
+                    <div class="column is-flex">
+                        <div class="post-view-body">
+                            <post-tools></post-tools>
+                            <div class="post-view-content" v-html="post.body"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -31,13 +34,12 @@
 <script>
 import format from "date-fns/format";
 import { get } from "axios";
+import PostTools from "@/components/PostTools";
 
 export default {
   name: "view-post",
-  data() {
-      return {
-        title: ""  
-      }
+  components: {
+    PostTools
   },
   async beforeRouteEnter(to, from, next) {
     let response;
@@ -45,7 +47,7 @@ export default {
       response = await get(`/posts/${to.params.id}`);
       document.title = response.data.post.title;
       next(vm => {
-          vm.post = response.data.post;
+        vm.post = response.data.post;
       });
     } catch (e) {
       if (e.response) {
@@ -61,9 +63,9 @@ export default {
   },
 
   watch: {
-      '$route'(to, from) {
-          console.log(this.$route.matched);
-      }
+    $route(to, from) {
+      console.log(this.$route.matched);
+    }
   },
 
   data() {

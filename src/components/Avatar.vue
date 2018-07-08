@@ -1,32 +1,25 @@
 <template>
-<form action="" id="avatar">
-    <figure class="avatar image is-96x96">
-        <img :src="previewImage" v-if="currentUser">
-    </figure>
-    <div class="options">
-        <template v-if="isInitial">
-            <span class="set">
-              <i class="fa fa-file-image"></i>
-                Select Image
-                <input type="file" 
-                name="uploadAvatar"  
-                @change="setImage($event.target.name, $event.target.files)"
-                accept="image/"
-                class="upload-avatar">
-            </span>
-        </template>
-        <template v-if="isSet">
-          <button class="upload-button" @click.prevent="upload">
-            <i class="fa fa-upload"></i> 
-            Upload  
-          </button>
-          <button class="upload-button" @click.prevent="reset">
-            <i class="fa fa-remove"></i>
-            Remove
-          </button>  
-        </template>  
-    </div>
-</form>
+<div class="avatar-lg">
+   <img :src="previewImage" v-if="currentUser">
+   <template v-if="isInitial">
+      <span class="set">
+        <i class="fa fa-image"></i>
+          <input type="file" 
+          name="uploadAvatar"  
+          @change="setImage($event.target.name, $event.target.files)"
+          accept="image/"
+          class="upload-avatar">
+      </span>
+    </template>
+    <template v-if="isSet">
+      <button class="upload" @click.prevent="upload" alt="upload">
+        <i class="fa fa-upload"></i> 
+      </button>
+      <button class="remove" @click.prevent="reset" alt="reset">
+        <i class="fa fa-remove"></i>
+      </button>  
+    </template>  
+</div>
 </template>
 
 <script>
@@ -175,65 +168,13 @@ export default {
 
 
 <style lang="scss">
+$avatar-button-dimensions: 30px;
 #avatar {
   position: relative;
-  &:hover {
-    .options {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+  img {
+    border-radius: 50%;
   }
 
-  .options {
-    display: none;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    // margin-top: auto;
-    // margin-bottom: auto;
-    text-decoration: uppercase;
-    font-size: 8pt;
-
-    .upload-button {
-      border: 0;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 5px;
-      min-width: 40px;
-      color: #fff;
-      &:focus {
-        outline: none;
-      }
-    }
-
-    .set,
-    .upload,
-    .remove {
-      background-color: rgba(0, 0, 0, 0.5);
-      color: #f1f1f1;
-      padding-top: 2px;
-      text-align: center;
-    }
-
-    .set {
-      position: relative;
-      width: 100%;
-      height: 20px;
-      margin-right: 5px;
-
-      .upload-avatar {
-        position: absolute;
-        top: 0;
-        left: 0;
-        opacity: 0;
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-      }
-    }
-  }
+ 
 }
 </style>

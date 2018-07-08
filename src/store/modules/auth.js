@@ -47,11 +47,9 @@ export const actions = {
     console.log(response);
   },
 
-  async invalidate({ dispatch, commit }) {
-    try {
-      await axios.post("/users/logout");
-    } catch (e) {
-      console.log(e);
+  async invalidate({ dispatch, commit }, logOutOfForum) {
+    if (logOutOfForum) {
+      await axios.post("/users/logout").catch();
     }
     axios.defaults.headers.common["Authorization"] = "";
     localStorage.removeItem("bis_access_token");
@@ -73,15 +71,15 @@ export const actions = {
       const response = await axios.get("/users");
       if (response.status >= 200 && response.status < 400) {
         commit("SET_CURRENT_USER", response.data.user);
+        console.log(response.data.user);
       }
     } catch (e) {
       if (e.response) {
         const status = e.response.status === 401;
         const expired = e.response.data.token_expired;
-        if (status && expired) {
-          if (state.isAuthenticated) {
-            dispatch("invalidate");
-          }
+        if (status) {
+          dispatch("invalidate", false);
+          console.log(e.response);          
         } else {
           console.log(e.response);
         }

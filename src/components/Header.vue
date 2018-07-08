@@ -11,12 +11,12 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <router-link class="navbar-item" to="/">Home</router-link> 
-                    <router-link class="navbar-item" to="/">History</router-link> 
-                    <router-link class="navbar-item" to="/">Recruitment</router-link> 
-                    <router-link class="navbar-item" to="/">Media</router-link> 
-                    <a :href="`${forumUrl}/session/sso`" class="navbar-item" v-if="isAuthenticated" target="_blank">Discussion</a>           
-                    <a :href="forumUrl" class="navbar-item" v-if="!isAuthenticated" target="_blank">Discussion</a>                                                 
+                    <router-link class="nav-item" to="/">Home</router-link> 
+                    <router-link class="nav-item" to="/">History</router-link> 
+                    <router-link class="nav-item" to="/">Recruitment</router-link> 
+                    <router-link class="nav-item" to="/">Media</router-link> 
+                    <a :href="`${forumUrl}/session/sso`" class="nav-item" v-if="isAuthenticated" target="_blank">Discussion</a>           
+                    <a :href="forumUrl" class="nav-item" v-if="!isAuthenticated" target="_blank">Discussion</a>                                                 
                 </div>
                 <div id="account-panel" class="navbar-end" v-if="!isAuthenticated">
                     <a class="navbar-item" @click.prevent="setModal(true)">
@@ -40,9 +40,13 @@
                         </div>
                         <div class="dropdown-menu" id="dropdown-menu" role="menu">
                             <div class="dropdown-content">
-                                <router-link to="/myaccount" class="dropdown-item">
+                                <router-link to="/account" class="dropdown-item">
                                     <i class="fa fa-gear"></i>
                                     Settings
+                                </router-link>
+                                <router-link to="/admin" class="dropdown-item" v-if="currentUser.admin">
+                                    <i class="fa fa-user"></i>
+                                    Admin
                                 </router-link>
                                 <a class="dropdown-item" @click.prevent="invalidate">
                                     <i class="fa fa-sign-out"></i>
@@ -61,7 +65,7 @@
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  name: "header",
+  name: "navbar",
   computed: {
       ...mapGetters([
           'isAuthenticated',

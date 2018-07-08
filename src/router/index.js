@@ -6,13 +6,14 @@ import Router from "vue-router";
 import ProgressBar from "@/components/ProgressBar";
 
 //views
-import MyAccount from "@/components/views/MyAccount";
 import Home from "@/components/views/Home";
-import Verify from "@/components/views/Verify";
-import ResetPassword from "@/components/views/ResetPassword";
-import Errors from "@/components/Errors";
-import ForumHandler from "@/components/ForumHandler";
-import ViewPost from "@/components/views/ViewPost";
+const Verify = () => import("@/components/views/Verify");
+const ResetPassword = () => import("@/components/views/ResetPassword");
+const ErrorHandler = () => import("@/components/views/ErrorHandler");
+const DiscourseSignIn = () => import("@/components/views/DiscourseSignIn");
+const Account = () => import("@/components/views/Account");
+const ViewPost = () => import("@/components/views/ViewPost");
+const PasswordSecurity = () => import("@/components/forms/PasswordSecurity");
 
 const bar = (Vue.prototype.$bar = new Vue(ProgressBar).$mount());
 document.body.appendChild(bar.$el);
@@ -39,7 +40,7 @@ const router = new Router({
       }
     },
     {
-      path: "/p/:id/:slug",
+      path: "/news/:id/:slug",
       name: "Post",
       component: ViewPost
     },
@@ -52,16 +53,34 @@ const router = new Router({
       }
     },
     {
-      path: "/myaccount",
-      name: "myaccount",
-      component: MyAccount,
+      path: "/account",
+      component: Account,
       meta: {
         title: "Best In Slot - My Account"
-      }
+      },
+      children: [
+        {
+          path: "",
+          name: "settings",          
+          component: PasswordSecurity,
+          meta: { title: "My Account - Security" }
+        },
+        {
+          path: "personal",
+
+          component: PasswordSecurity,
+          meta: { title: "My Account - Personal" }
+        },
+        {
+          path: "security",
+          component: PasswordSecurity,
+          meta: { title: "My Account - Security" }
+        }
+      ]
     },
     {
       path: "/sso",
-      component: ForumHandler,
+      component: DiscourseSignIn,
       meta: {
         title: "Signing into discourse..."
       }
@@ -72,7 +91,7 @@ const router = new Router({
     },
     {
       path: "/error/:status",
-      component: Errors,
+      component: ErrorHandler,
       props: true,
       meta: {
         title: "Error!"
@@ -86,7 +105,11 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title;
+  if (typeof to.meta !== undefined) {
+    document.title = to.meta.title;
+  } else {
+    document.title = "";
+  }
   next();
 });
 
